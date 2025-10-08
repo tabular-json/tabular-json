@@ -17,7 +17,7 @@ Install via npm:
 npm install @tabular-json/tabular-json
 ```
 
-Usage: 
+Usage:
 
 ```ts
 import { parse, stringify } from '@tabular-json/tabular-json'

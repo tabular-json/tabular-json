@@ -125,6 +125,14 @@
       }
     }
 
+    @media only screen and (max-width: 550px) {
+      .github {
+        position: absolute;
+        top: 10px;
+        right: 0;
+      }
+    }
+
     &.playground {
       ul li a.selected {
         background: var(--sub-menu-background);
