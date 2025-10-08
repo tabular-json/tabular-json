@@ -89,3 +89,7 @@ interface StringifyOptions {
   trailingCommas?: boolean
 }
 ```
+
+## Test Suite
+
+There is a JSON based Test Suite available that can be used to ensure that implementations of Tabular-JSON match the official specification, see [Tabular-JSON Test Suite](/test-suite/README.md).

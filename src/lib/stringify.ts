@@ -1,4 +1,4 @@
-import type { Field, GenericObject, Path, ValueGetter } from './types.js'
+import type { Field, GenericObject, Path, ValueGetter } from './types.d.ts'
 import { isObject, isTabular } from './is.js'
 import { getIn } from './objects.js'
 import { collectNestedPaths } from './fields.js'

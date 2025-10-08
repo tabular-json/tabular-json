@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/parse.test.json",
+  "type": "object",
+  "properties": {
+    "source": {
+      "const": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/parse.test.json"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "description": { "type": "string" },
+          "tests": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "input": { "type": "string" },
+                    "output": {}
+                  },
+                  "required": ["input", "output"],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "input": { "type": "string" },
+                    "output_enum": {
+                      "enum": [
+                        "negative_zero",
+                        "positive_infinity",
+                        "negative_infinity",
+                        "not_a_number"
+                      ]
+                    }
+                  },
+                  "required": ["input", "output_enum"],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "input": { "type": "string" },
+                    "throws": { "type": "string" }
+                  },
+                  "required": ["input", "throws"],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": ["category", "description", "tests"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["source", "groups"],
+  "additionalProperties": false
+}

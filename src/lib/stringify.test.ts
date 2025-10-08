@@ -1,49 +1,68 @@
-import { test, expect } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { stringify } from './stringify.js'
+import suite from '../../test-suite/stringify.test.json'
+import type { StringifyTestEnum, StringifyTestSuite } from '../../test-suite/stringify.test'
 
-test('stringify', function () {
+function isTestEnum(test: unknown): test is StringifyTestEnum {
+  return !!test && typeof (test as Record<string, unknown>)['input_enum'] === 'string'
+}
+
+const testsByCategory = Object.groupBy(suite.groups, (group) => group.category) as Record<
+  string,
+  StringifyTestSuite['groups']
+>
+
+for (const [category, testGroups] of Object.entries(testsByCategory)) {
+  describe(category, () => {
+    for (const group of testGroups) {
+      describe(group.description, () => {
+        for (const currentTest of group.tests) {
+          if (isTestEnum(currentTest)) {
+            const description = `input_enum = ${JSON.stringify(currentTest.input_enum)}`
+
+            test(description, () => {
+              const { input_enum, output } = currentTest
+
+              switch (input_enum) {
+                case 'negative_zero':
+                  expect(stringify(-0, group.options)).toEqual(output)
+                  break
+
+                case 'positive_infinity':
+                  expect(stringify(Infinity, group.options)).toEqual(output)
+                  break
+
+                case 'negative_infinity':
+                  expect(stringify(-Infinity, group.options)).toEqual(output)
+                  break
+
+                case 'not_a_number':
+                  expect(stringify(NaN, group.options)).toEqual(output)
+                  break
+
+                default:
+                  throw new Error(`Unknown input_enum value "${input_enum}"`)
+              }
+            })
+          } else {
+            const description = `input = ${JSON.stringify(currentTest.input)}`
+
+            test(description, () => {
+              const { input, output } = currentTest
+
+              expect(stringify(input, group.options)).toEqual(output)
+            })
+          }
+        }
+      })
+    }
+  })
+}
+
+test('should handle unsupported data types in stringify', function () {
   expect(stringify(undefined)).toEqual('')
   expect(stringify(function () {})).toEqual('')
   expect(stringify(Symbol('test'))).toEqual('')
-
-  expect(stringify(null)).toEqual('null')
-
-  expect(stringify(true)).toEqual('true')
-  expect(stringify(false)).toEqual('false')
-
-  expect(stringify(2.3)).toEqual('2.3')
-  expect(stringify(-2.3)).toEqual('-2.3')
-  expect(stringify(Infinity)).toEqual('inf')
-  expect(stringify(-Infinity)).toEqual('-inf')
-  expect(stringify(NaN)).toEqual('nan')
-
-  expect(stringify('str')).toEqual('"str"')
-  expect(stringify('"')).toEqual('"\\""')
-  expect(stringify('\\')).toEqual('"\\\\"')
-  expect(stringify('\b')).toEqual('"\\b"')
-  expect(stringify('\f')).toEqual('"\\f"')
-  expect(stringify('\n')).toEqual('"\\n"')
-  expect(stringify('\r')).toEqual('"\\r"')
-  expect(stringify('\t')).toEqual('"\\t"')
-  expect(stringify('"\\/\b\f\n\r\t')).toEqual('"\\"\\\\/\\b\\f\\n\\r\\t"')
-  expect(stringify('∛')).toEqual('"∛"')
-  expect(stringify('a " character')).toEqual('"a \\" character"')
-  expect(stringify('a , character')).toEqual('"a , character"')
-  expect(stringify('a . character')).toEqual('"a . character"')
-  expect(stringify('a : character')).toEqual('"a : character"')
-  expect(stringify('a - character')).toEqual('"a - character"')
-  expect(stringify('a [ character')).toEqual('"a [ character"')
-  expect(stringify('a ] character')).toEqual('"a ] character"')
-  expect(stringify('a { character')).toEqual('"a { character"')
-  expect(stringify('a } character')).toEqual('"a } character"')
-  expect(stringify('a \n character')).toEqual('"a \\n character"')
-  expect(stringify(' start space')).toEqual('" start space"')
-  expect(stringify('\tstart space')).toEqual('"\\tstart space"')
-  expect(stringify('end space ')).toEqual('"end space "')
-  expect(stringify('end space\t')).toEqual('"end space\\t"')
-  expect(stringify('8 digits')).toEqual('"8 digits"')
-  expect(stringify('-8 digits')).toEqual('"-8 digits"')
-  expect(stringify('with spaces in the middle')).toEqual('"with spaces in the middle"')
 
   expect(
     stringify([
@@ -81,232 +100,8 @@ test('stringify', function () {
     })
   ).toEqual('"foo"')
 
+  expect(stringify({ fn: () => {} }, { indentation: 2 })).toEqual('{}')
+
   // TODO: Symbol
   // TODO: ignore non-enumerable properties
-})
-
-test('stringify a full JSON object', function () {
-  const expected = '{"a":123,"b":"str","c":null,"d":false,"e":[1,2,3]}'
-  const json = { a: 123, b: 'str', c: null, d: false, e: [1, 2, 3] }
-
-  const stringified = stringify(json)
-
-  expect(stringified).toEqual(expected)
-})
-
-test('stringify a table without indentation', function () {
-  const json = [
-    { id: 2, name: 'joe' },
-    { id: 3, name: 'sarah' }
-  ]
-
-  expect(stringify(json)).toEqual('"id","name"\n2,"joe"\n3,"sarah"\n')
-})
-
-test('stringify a nested table without indentation', function () {
-  const json = {
-    data: [
-      { id: 2, name: 'joe' },
-      { id: 3, name: 'sarah' }
-    ]
-  }
-
-  expect(stringify(json)).toEqual('{"data":---\n"id","name"\n2,"joe"\n3,"sarah"\n---}')
-})
-
-test('stringify a table with indentation', function () {
-  const json = [
-    { id: 2, name: 'joe' },
-    { id: 3, name: 'sarah' }
-  ]
-
-  expect(stringify(json, { indentation: 2 })).toEqual('"id", "name"\n2,    "joe"\n3,    "sarah"\n')
-})
-
-test('stringify a nested table', function () {
-  const json = {
-    name: 'rob',
-    hobbies: ['swimming', 'biking'],
-    friends: [
-      { id: 2, name: 'joe' },
-      { id: 3, name: 'sarah' }
-    ],
-    id: 4
-  }
-
-  expect(stringify(json, { indentation: 2 })).toEqual(`{
-  "name": "rob",
-  "hobbies": [
-    "swimming",
-    "biking"
-  ],
-  "friends": ---
-    "id", "name"
-    2,    "joe"
-    3,    "sarah"
-  ---,
-  "id": 4
-}`)
-})
-
-test('stringify a nested table with nested objects', function () {
-  const json = {
-    name: 'rob',
-    hobbies: ['swimming', 'biking'],
-    friends: [
-      { id: 2, name: 'joe', address: { city: 'New York', street: '1st Ave' } },
-      { id: 3, name: 'sarah', address: { city: 'Washington', street: '18th Street NW' } }
-    ]
-  }
-
-  expect(stringify(json, { indentation: 2 })).toEqual(`{
-  "name": "rob",
-  "hobbies": [
-    "swimming",
-    "biking"
-  ],
-  "friends": ---
-    "id", "name",  "address"."city", "address"."street"
-    2,    "joe",   "New York",       "1st Ave"
-    3,    "sarah", "Washington",     "18th Street NW"
-  ---
-}`)
-})
-
-test('stringify a table with field names that need escaping', function () {
-  const json = [
-    {
-      id: 2,
-      'first.name': 'joe',
-      address: {
-        'current.city': 'New York',
-        'main,street': '1st Ave',
-        'with\nreturn': true
-      }
-    },
-    {
-      id: 3,
-      'first.name': 'sarah',
-      address: {
-        'current.city': 'Washington',
-        'main,street': '18th Street NW',
-        'with\nreturn': false
-      }
-    }
-  ]
-
-  expect(stringify(json, { indentation: 2 }))
-    .toEqual(`"id", "first.name", "address"."current.city", "address"."main,street", "address"."with\\nreturn"
-2,    "joe",        "New York",               "1st Ave",               true
-3,    "sarah",      "Washington",             "18th Street NW",        false
-`)
-})
-
-test('stringify a nested table with non-homogeneous content', function () {
-  const json = {
-    name: 'rob',
-    friends: [
-      { id: 2, name: 'joe', details: { city: 'New York' } },
-      { id: 3, name: 'sarah', age: 32, details: {} }
-    ]
-  }
-
-  expect(stringify(json, { indentation: 2 })).toEqual(`{
-  "name": "rob",
-  "friends": ---
-    "id", "name",  "details"."city", "age"
-    2,    "joe",   "New York",       
-    3,    "sarah", ,                 32
-  ---
-}`)
-})
-
-test('stringify a nested table with nested arrays', function () {
-  const json = {
-    name: 'rob',
-    friends: [
-      { id: 2, name: 'joe', scores: [7.2, 6.1, 8.1], done: false },
-      { id: 3, name: 'sarah', scores: [7.7], done: true }
-    ]
-  }
-
-  expect(stringify(json, { indentation: 2 })).toEqual(`{
-  "name": "rob",
-  "friends": ---
-    "id", "name",  "scores",      "done"
-    2,    "joe",   [7.2,6.1,8.1], false
-    3,    "sarah", [7.7],         true
-  ---
-}`)
-})
-
-test('stringify an object with trailing spaces', function () {
-  expect(stringify({ id: 2, name: 'joe' }, { trailingCommas: true })).toEqual(
-    '{"id":2,"name":"joe",}'
-  )
-  expect(stringify({ id: 2, name: 'joe' }, { trailingCommas: true, indentation: 2 })).toEqual(
-    '{\n  "id": 2,\n  "name": "joe",\n}'
-  )
-  expect(stringify({}, { trailingCommas: true })).toEqual('{}')
-})
-
-test('stringify an array with trailing spaces', function () {
-  expect(stringify([1, 2, 3], { trailingCommas: true })).toEqual('[1,2,3,]')
-  expect(stringify([1, 2, 3], { trailingCommas: true, indentation: 2 })).toEqual(
-    '[\n  1,\n  2,\n  3,\n]'
-  )
-  expect(stringify([], { trailingCommas: true })).toEqual('[]')
-})
-
-test('stringify with numeric space', function () {
-  const json: unknown = { a: 1, b: [1, 2, null, undefined, { c: 3 }], d: null }
-
-  const expected =
-    '{\n' +
-    '  "a": 1,\n' +
-    '  "b": [\n' +
-    '    1,\n' +
-    '    2,\n' +
-    '    null,\n' +
-    '    null,\n' +
-    '    {\n' +
-    '      "c": 3\n' +
-    '    }\n' +
-    '  ],\n' +
-    '  "d": null\n' +
-    '}'
-
-  expect(stringify(json, { indentation: 2 })).toEqual(expected)
-})
-
-test('stringify with string space', function () {
-  const json: unknown = { a: 1, b: [1, 2, null, undefined, { c: 3 }], d: null }
-
-  const expected =
-    '{\n' +
-    '~"a": 1,\n' +
-    '~"b": [\n' +
-    '~~1,\n' +
-    '~~2,\n' +
-    '~~null,\n' +
-    '~~null,\n' +
-    '~~{\n' +
-    '~~~"c": 3\n' +
-    '~~}\n' +
-    '~],\n' +
-    '~"d": null\n' +
-    '}'
-
-  expect(stringify(json, { indentation: '~' })).toEqual(expected)
-})
-
-test('stringify an empty array', function () {
-  expect(stringify([], { indentation: 2 })).toEqual('[]')
-  expect(stringify([], { indentation: '    ' })).toEqual('[]')
-})
-
-test('stringify an empty object', function () {
-  expect(stringify({}, { indentation: 2 })).toEqual('{}')
-  expect(stringify({}, { indentation: '    ' })).toEqual('{}')
-  expect(stringify({ fn: () => {} }, { indentation: 2 })).toEqual('{}')
 })

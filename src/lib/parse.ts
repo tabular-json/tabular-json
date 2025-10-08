@@ -1,4 +1,4 @@
-import type { SetValue, TableField } from './types.js'
+import type { SetValue, TableField } from './types.d.ts'
 import { setIn } from './objects.js'
 
 /**

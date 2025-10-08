@@ -52,3 +52,5 @@ const updatedText = stringify(data, { indentation: 2, trailingCommas: false })
 ## How to implement support in a new language
 
 The [reference implementation in TypeScript](https://github.com/tabular-json/tabular-json/tree/main/src/lib) can be used to port support for Tabular-JSON in new programming languages. Also, the [ANTLR grammer of Tabular-JSON](/specification) can be used to generate a Tabular-JSON parser for the following languages: Java, C#, Python, JavaScript, TypeScript, Go, C++, Swift, PHP, DART.
+
+There is a JSON based Test Suite available that can be used to ensure that implementations of Tabular-JSON match the official specification, see [Tabular-JSON Test Suite](https://github.com/tabular-json/tabular-json/tree/main/test-suite/README.md).

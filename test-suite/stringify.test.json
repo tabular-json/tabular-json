@@ -1,0 +1,328 @@
+{
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/stringify.test.json",
+  "groups": [
+    {
+      "category": "array",
+      "description": "should stringify an array",
+      "tests": [
+        { "input": [42, "str", null, false, true], "output": "[42,\"str\",null,false,true]" }
+      ]
+    },
+    {
+      "category": "array",
+      "description": "should stringify an array with indentation",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [{ "input": [1, 2], "output": "[\n  1,\n  2\n]" }]
+    },
+    {
+      "category": "array",
+      "description": "should stringify an array with tab indentation",
+      "options": {
+        "indentation": "\t"
+      },
+      "tests": [{ "input": [1, 2], "output": "[\n\t1,\n\t2\n]" }]
+    },
+    {
+      "category": "array",
+      "description": "should stringify an array with custom indentation characters",
+      "options": {
+        "indentation": "~~"
+      },
+      "tests": [{ "input": [1, 2], "output": "[\n~~1,\n~~2\n]" }]
+    },
+    {
+      "category": "array",
+      "description": "should stringify an array with trailing commas",
+      "options": {
+        "trailingCommas": true
+      },
+      "tests": [
+        { "input": [1, 2], "output": "[1,2,]" },
+        { "input": [], "output": "[]" }
+      ]
+    },
+    {
+      "category": "array",
+      "description": "should stringify an array with trailing commas and indentation",
+      "options": {
+        "indentation": 2,
+        "trailingCommas": true
+      },
+      "tests": [
+        { "input": [1, 2], "output": "[\n  1,\n  2,\n]" },
+        { "input": [], "output": "[]" }
+      ]
+    },
+    {
+      "category": "object",
+      "description": "should stringify an object",
+      "tests": [
+        {
+          "input": { "a": 123, "b": "str", "c": null, "d": false, "e": [1, 2, 3] },
+          "output": "{\"a\":123,\"b\":\"str\",\"c\":null,\"d\":false,\"e\":[1,2,3]}"
+        }
+      ]
+    },
+    {
+      "category": "object",
+      "description": "should stringify an object with indentation",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [{ "input": { "a": 1, "b": 2 }, "output": "{\n  \"a\": 1,\n  \"b\": 2\n}" }]
+    },
+    {
+      "category": "object",
+      "description": "should stringify an object with tab indentation",
+      "options": {
+        "indentation": "\t"
+      },
+      "tests": [{ "input": { "a": 1, "b": 2 }, "output": "{\n\t\"a\": 1,\n\t\"b\": 2\n}" }]
+    },
+    {
+      "category": "object",
+      "description": "should stringify an object with custom indentation characters",
+      "options": {
+        "indentation": "~~"
+      },
+      "tests": [{ "input": { "a": 1, "b": 2 }, "output": "{\n~~\"a\": 1,\n~~\"b\": 2\n}" }]
+    },
+    {
+      "category": "object",
+      "description": "should stringify an object with trailing commas",
+      "options": {
+        "trailingCommas": true
+      },
+      "tests": [
+        { "input": { "a": 1, "b": 2 }, "output": "{\"a\":1,\"b\":2,}" },
+        { "input": {}, "output": "{}" }
+      ]
+    },
+    {
+      "category": "object",
+      "description": "should stringify an object with trailing commas and indentation",
+      "options": {
+        "indentation": 2,
+        "trailingCommas": true
+      },
+      "tests": [
+        { "input": { "a": 1, "b": 2 }, "output": "{\n  \"a\": 1,\n  \"b\": 2,\n}" },
+        { "input": {}, "output": "{}" }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a root table",
+      "tests": [
+        {
+          "input": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ],
+          "output": "\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a root table with indentation",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ],
+          "output": "\"id\", \"name\"\n1,    \"Joe\"\n2,    \"Sarah\"\n"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a nested table",
+      "tests": [
+        {
+          "input": {
+            "data": [
+              { "id": 1, "name": "Joe" },
+              { "id": 2, "name": "Sarah" }
+            ]
+          },
+          "output": "{\"data\":---\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n---}"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a nested table with indentation",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": {
+            "data": [
+              { "id": 1, "name": "Joe" },
+              { "id": 2, "name": "Sarah" }
+            ]
+          },
+          "output": "{\n  \"data\": ---\n    \"id\", \"name\"\n    1,    \"Joe\"\n    2,    \"Sarah\"\n  ---\n}"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a table with custom indentation characters",
+      "options": {
+        "indentation": "~~"
+      },
+      "tests": [
+        {
+          "input": {
+            "data": [
+              { "id": 1, "name": "Joe" },
+              { "id": 2, "name": "Sarah" }
+            ]
+          },
+          "output": "{\n~~\"data\": ---\n~~~~\"id\", \"name\"\n~~~~1,    \"Joe\"\n~~~~2,    \"Sarah\"\n~~---\n}"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a nested table with nested properties",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": {
+            "data": [
+              { "id": 1, "name": "Joe", "address": { "city": "New York", "street": "1st Ave" } },
+              {
+                "id": 2,
+                "name": "Sarah",
+                "address": { "city": "Washington", "street": "18th Street NW" }
+              }
+            ]
+          },
+          "output": "{\n  \"data\": ---\n    \"id\", \"name\",  \"address\".\"city\", \"address\".\"street\"\n    1,    \"Joe\",   \"New York\",       \"1st Ave\"\n    2,    \"Sarah\", \"Washington\",     \"18th Street NW\"\n  ---\n}"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a table with nested properties containing special characters",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": [
+            {
+              "id": 1,
+              "first.name": "Joe",
+              "address": {
+                "current.city": "New York",
+                "main,street": "1st Ave",
+                "with\nreturn": true
+              }
+            }
+          ],
+          "output": "\"id\", \"first.name\", \"address\".\"current.city\", \"address\".\"main,street\", \"address\".\"with\\nreturn\"\n1,    \"Joe\",        \"New York\",               \"1st Ave\",               true\n"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a nested table with non-homogeneous content",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": {
+            "data": [
+              { "id": 1, "address": { "city": "New York" } },
+              { "id": 2, "address": {} }
+            ]
+          },
+          "output": "{\n  \"data\": ---\n    \"id\", \"address\".\"city\"\n    1,    \"New York\"\n    2,    \n  ---\n}"
+        },
+        {
+          "input": {
+            "data": [
+              { "id": 1, "address": { "city": "New York" } },
+              { "id": 2, "address": "1st Ave, New York" }
+            ]
+          },
+          "output": "{\n  \"data\": ---\n    \"id\", \"address\"\n    1,    {\"city\":\"New York\"}\n    2,    \"1st Ave, New York\"\n  ---\n}"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a nested table with nested arrays",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": [
+            { "id": 1, "scores": [7.2, 6.1, 8.1] },
+            { "id": 2, "scores": [7.7] }
+          ],
+          "output": "\"id\", \"scores\"\n1,    [7.2,6.1,8.1]\n2,    [7.7]\n"
+        }
+      ]
+    },
+    {
+      "category": "string",
+      "description": "should stringify a string",
+      "tests": [
+        { "input": "Hello world", "output": "\"Hello world\"" },
+        { "input": "123", "output": "\"123\"" },
+        { "input": "∛", "output": "\"∛\"" }
+      ]
+    },
+    {
+      "category": "string",
+      "description": "should escape special characters in a string",
+      "tests": [
+        { "input": "\"", "output": "\"\\\"\"" },
+        { "input": "\\", "output": "\"\\\\\"" },
+        { "input": "\b", "output": "\"\\b\"" },
+        { "input": "\f", "output": "\"\\f\"" },
+        { "input": "\n", "output": "\"\\n\"" },
+        { "input": "\r", "output": "\"\\r\"" },
+        { "input": "\t", "output": "\"\\t\"" },
+        { "input": { "\\\\d": 1 }, "output": "{\"\\\\\\\\d\":1}" }
+      ]
+    },
+    {
+      "category": "number",
+      "description": "should stringify numbers",
+      "tests": [
+        { "input": 0, "output": "0" },
+        { "input": 2.3, "output": "2.3" },
+        { "input": -2.3, "output": "-2.3" },
+        { "input_enum": "positive_infinity", "output": "inf" },
+        { "input_enum": "negative_infinity", "output": "-inf" },
+        { "input_enum": "not_a_number", "output": "nan" }
+      ]
+    },
+    {
+      "category": "keywords",
+      "description": "should stringify keywords",
+      "tests": [
+        { "input": true, "output": "true" },
+        { "input": false, "output": "false" },
+        { "input": null, "output": "null" }
+      ]
+    }
+  ]
+}

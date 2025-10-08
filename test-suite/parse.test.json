@@ -1,0 +1,452 @@
+{
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/parse.test.json",
+  "groups": [
+    {
+      "category": "object",
+      "description": "should parse an object",
+      "tests": [
+        { "input": "{}", "output": {} },
+        { "input": "  { \n } \t ", "output": {} },
+        { "input": "{\"a\": {}}", "output": { "a": {} } },
+        { "input": "{\"a\": \"b\"}", "output": { "a": "b" } },
+        { "input": "{\"a\": 2}", "output": { "a": 2 } }
+      ]
+    },
+    {
+      "category": "object",
+      "description": "should parse a full JSON object",
+      "tests": [
+        {
+          "input": "{\"a\":2.3e100,\"b\":\"str\",\"c\":null,\"d\":false,\"e\":[1,2,3]}",
+          "output": { "a": 2.3e100, "b": "str", "c": null, "d": false, "e": [1, 2, 3] }
+        }
+      ]
+    },
+    {
+      "category": "object",
+      "description": "parse trailing comma in an object",
+      "tests": [
+        { "input": "{\"a\": 2,\"b\":3,}", "output": { "a": 2, "b": 3 } },
+        { "input": "{\"a\": 2,\"b\":3 , }", "output": { "a": 2, "b": 3 } }
+      ]
+    },
+    {
+      "category": "object",
+      "description": "should throw an error in case of a trailing comma in an empty object",
+      "tests": [{ "input": "{,}", "throws": "Quoted object key expected but got ','" }]
+    },
+    {
+      "category": "array",
+      "description": "should parse an array",
+      "tests": [
+        { "input": "[]", "output": [] },
+        { "input": " [ \n ] \t", "output": [] },
+        { "input": "[{}]", "output": [{}] },
+        { "input": "{\"a\":[]}", "output": { "a": [] } },
+        {
+          "input": "[1, \"hi\", true, false, null, {}, []]",
+          "output": [1, "hi", true, false, null, {}, []]
+        }
+      ]
+    },
+    {
+      "category": "array",
+      "description": "parse trailing comma in an array",
+      "tests": [
+        { "input": "[1,2,3,]", "output": [1, 2, 3] },
+        { "input": "[1,2,3 , ]", "output": [1, 2, 3] }
+      ]
+    },
+    {
+      "category": "array",
+      "description": "should throw an error in case of a trailing comma in an empty array",
+      "tests": [{ "input": "[,]", "throws": "Array item expected but got ','" }]
+    },
+    {
+      "category": "array",
+      "description": "should parse a formatted array",
+      "tests": [{ "input": "[\n  1,\n  2,\n  3\n]", "output": [1, 2, 3] }]
+    },
+    {
+      "category": "table",
+      "description": "should parse a table",
+      "tests": [
+        {
+          "input": "---\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n---",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should parse a table with \\r\\n newlines",
+      "tests": [
+        {
+          "input": "---\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n---",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should parse a table with nested properties",
+      "tests": [
+        {
+          "input": "---\n    \"id\",\"name\",\"address\".\"city\",\"address\".\"street\"\n    1,\"Joe\",\"New York\",\"1st Ave\"\n    2,\"Sarah\",\"Washington\",\"18th Street NW\"\n    ---",
+          "output": [
+            { "id": 1, "name": "Joe", "address": { "city": "New York", "street": "1st Ave" } },
+            {
+              "id": 2,
+              "name": "Sarah",
+              "address": { "city": "Washington", "street": "18th Street NW" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should parse a table with whitespace",
+      "tests": [
+        {
+          "input": "---\n      \"id\" , \"details\" . \"name\" \n      1 , \"Joe\" \n      2 , \"Sarah\" \n      ---",
+          "output": [
+            { "id": 1, "details": { "name": "Joe" } },
+            { "id": 2, "details": { "name": "Sarah" } }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should parse a table with missing values",
+      "tests": [
+        {
+          "input": "---\n\"id\", \"name\"\n1 , \n2 , \"Sarah\" \n---",
+          "output": [{ "id": 1 }, { "id": 2, "name": "Sarah" }]
+        },
+        {
+          "input": "\"id\", \"name\" \n1,\"Joe\"\n,\"Sarah\"",
+          "output": [{ "id": 1, "name": "Joe" }, { "name": "Sarah" }]
+        },
+        {
+          "input": "---\n\"id\", \"name\" \n1 , \"Joe\" \n, \"Sarah\" \n---",
+          "output": [{ "id": 1, "name": "Joe" }, { "name": "Sarah" }]
+        },
+        {
+          "input": "---\n\"id\" \n1 \n\n3\n---",
+          "output": [{ "id": 1 }, { "id": 3 }]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should parse a nested table",
+      "tests": [
+        {
+          "input": "{\n\"data\": ---\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n---\n  }",
+          "output": {
+            "data": [
+              { "id": 1, "name": "Joe" },
+              { "id": 2, "name": "Sarah" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse a root table",
+      "tests": [
+        {
+          "input": "\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse a root table starting with a blank line",
+      "tests": [
+        {
+          "input": "\n  \"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse a root table ending with multiple blank lines",
+      "tests": [
+        {
+          "input": "\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n\n  ",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse a root table without newline at the end",
+      "tests": [
+        {
+          "input": "\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse a root table containing nested arrays",
+      "tests": [
+        {
+          "input": "---\n\"id\", \"name\", \"score\"\n1, \"joe\", [5, 7]\n2, \"sarah\", [7, 7, 8]\n---",
+          "output": [
+            { "id": 1, "name": "joe", "score": [5, 7] },
+            { "id": 2, "name": "sarah", "score": [7, 7, 8] }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse a root table containing nested objects",
+      "tests": [
+        {
+          "input": "---\n\"id\", \"name\", \"address\"\n1, \"Joe\", { \"city\": \"New York\", \"street\": \"1st Ave\" }\n2, \"Sarah\", { \"city\": \"Washington\", \"street\": \"18th Street NW\" }\n---",
+          "output": [
+            { "id": 1, "name": "Joe", "address": { "city": "New York", "street": "1st Ave" } },
+            {
+              "id": 2,
+              "name": "Sarah",
+              "address": { "city": "Washington", "street": "18th Street NW" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse a root table with field names that are escaped",
+      "tests": [
+        {
+          "input": "\"id\", \"first.name\", \"address\".\"current.city\", \"address\".\"main,street\", \"address\".\"with\\nreturn\"\n2, \"joe\", \"New York\", \"1st Ave\", true\n3, \"sarah\", \"Washington\", \"18th Street NW\", false\n",
+          "output": [
+            {
+              "id": 2,
+              "first.name": "joe",
+              "address": {
+                "current.city": "New York",
+                "main,street": "1st Ave",
+                "with\nreturn": true
+              }
+            },
+            {
+              "id": 3,
+              "first.name": "sarah",
+              "address": {
+                "current.city": "Washington",
+                "main,street": "18th Street NW",
+                "with\nreturn": false
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "number",
+      "description": "should parse a number",
+      "tests": [
+        { "input": "23", "output": 23 },
+        { "input": "0", "output": 0 },
+        { "input": "0e+2", "output": 0 },
+        { "input": "0.0", "output": 0 },
+        { "input": "2.3", "output": 2.3 },
+        { "input": "2300e3", "output": 2300e3 },
+        { "input": "2300e+3", "output": 2300e3 },
+        { "input": "2300e-3", "output": 2300e-3 },
+        { "input": "-2", "output": -2 },
+        { "input": "2e3", "output": 2e3 },
+        { "input": "2E3", "output": 2e3 },
+        { "input": "2e+3", "output": 2e3 },
+        { "input": "2E+3", "output": 2e3 },
+        { "input": "2E-3", "output": 2e-3 },
+        { "input": "2e-3", "output": 2e-3 },
+        { "input": "inf", "output_enum": "positive_infinity" },
+        { "input": "-inf", "output_enum": "negative_infinity" },
+        { "input": "nan", "output_enum": "not_a_number" },
+        { "input": "000123", "throws": "Expected end of input but got '0' at position 1" }
+      ]
+    },
+    {
+      "category": "string",
+      "description": "should parse a string",
+      "tests": [
+        { "input": "\"str\"", "output": "str" },
+        { "input": "\"\\\"\\\\\\/\\b\\f\\n\\r\\t\"", "output": "\"\\/\b\f\n\r\t" },
+        { "input": "\"\\u260E\"", "output": "\u260E" },
+        { "input": "\"a \\n character\"", "output": "a \n character" }
+      ]
+    },
+    {
+      "category": "string",
+      "description": "should handle strings equaling a JSON delimiter",
+      "tests": [
+        { "input": "\"[\"", "output": "[" },
+        { "input": "\"]\"", "output": "]" },
+        { "input": "\"{\"", "output": "{" },
+        { "input": "\"}\"", "output": "}" },
+        { "input": "\":\"", "output": ":" },
+        { "input": "\",\"", "output": "," }
+      ]
+    },
+    {
+      "category": "string",
+      "description": "should handle unicode charactes in a string",
+      "tests": [
+        { "input": "\"★\"", "output": "★" },
+        { "input": "\"\uD83D\uDE00\"", "output": "😀" },
+        { "input": "\"\\ud83d\\ude00\"", "output": "\ud83d\ude00" },
+        { "input": "\"йнформация\"", "output": "йнформация" }
+      ]
+    },
+    {
+      "category": "string",
+      "description": "handles escaped unicode characters in a string",
+      "tests": [
+        { "input": "\"\\u2605\"", "output": "\u2605" },
+        { "input": "\"\\ud83d\\ude00\"", "output": "\ud83d\ude00" },
+        {
+          "input": "\"\\u0439\\u043d\\u0444\\u043e\\u0440\\u043c\\u0430\\u0446\\u0438\\u044f\"",
+          "output": "\u0439\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f"
+        }
+      ]
+    },
+    {
+      "category": "keywords",
+      "description": "should parse keywords",
+      "tests": [
+        { "input": "true", "output": true },
+        { "input": "false", "output": false },
+        { "input": "null", "output": null }
+      ]
+    },
+    {
+      "category": "comments",
+      "description": "should parse a line comment",
+      "tests": [
+        { "input": "{\n// comment\n\"key\": \"value\"\n}", "output": { "key": "value" } },
+        { "input": "{\n    \"key\": \"value\"\n    // comment\n  }", "output": { "key": "value" } },
+        { "input": "// comment\n{\n  \"key\": \"value\"\n}", "output": { "key": "value" } },
+        {
+          "input": "// comment 1\n// comment 2\n{\n  \"key\": \"value\"\n}",
+          "output": { "key": "value" }
+        }
+      ]
+    },
+    {
+      "category": "comments",
+      "description": "should parse a line comment inside a table",
+      "tests": [
+        {
+          "input": "\"id\",\"name\"\n// comment\n1,\"Joe\"\n2,\"Sarah\"",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        },
+        {
+          "input": "\"id\",\"name\"\n// comment 1\n// comment 2\n1,\"Joe\"\n2,\"Sarah\"",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        },
+        {
+          "input": "\"id\",\"name\" // comment 1\n1,\"Joe\" // comment 2\n2,\"Sarah\"  // comment 3",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        },
+        {
+          "input": "// comment 1\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "comments",
+      "description": "should parse a block comment",
+      "tests": [
+        {
+          "input": "{\n  /* multi\n     line\n     comment */ \n  \"key\": \"value\"\n}",
+          "output": { "key": "value" }
+        },
+        {
+          "input": "/* multi\n  line\n  comment */ \n{\n  \"key\": \"value\"\n}",
+          "output": { "key": "value" }
+        },
+        {
+          "input": "/* block comment 1 */\n/* block comment 2 */\n{\n  \"key\": \"value\"\n}",
+          "output": { "key": "value" }
+        }
+      ]
+    },
+    {
+      "category": "comments",
+      "description": "should parse a block comment inside a table",
+      "tests": [
+        {
+          "input": "\"id\",\"name\"\n/* multi\n   line\n   comment */\n1,\"Joe\"\n2,\"Sarah\"",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        },
+        {
+          "input": "\"id\",\"name\"  /* multi\n   line\n   comment */\n1,\"Joe\"\n2,\"Sarah\"",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        },
+        {
+          "input": "/* multi\nline\ncomment */\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        },
+        {
+          "input": "/* block comment 1 */\n/* block comment 2 */\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"",
+          "output": [
+            { "id": 1, "name": "Joe" },
+            { "id": 2, "name": "Sarah" }
+          ]
+        }
+      ]
+    }
+  ]
+}

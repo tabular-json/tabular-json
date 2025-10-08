@@ -1,4 +1,4 @@
-import type { NestedObject, Path } from './types.js'
+import type { NestedObject, Path } from './types.d.ts'
 import { isObject } from './is.js'
 
 const leaf = Symbol()

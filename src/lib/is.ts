@@ -1,4 +1,4 @@
-import type { GenericObject } from './types.js'
+import type { GenericObject } from './types.d.ts'
 
 export function isTabular(value: unknown): value is Array<GenericObject<unknown>> {
   return Array.isArray(value) && value.length > 0 && value.every(isObject)
