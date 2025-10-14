@@ -1,5 +1,5 @@
 {
-  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.1/test-suite/parse.test.json",
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/parse.test.json",
   "groups": [
     {
       "category": "object",
@@ -300,31 +300,24 @@
       "category": "string",
       "description": "should parse a string",
       "tests": [
-        { "input": "\"str\"", "output": "str" },
+        { "input": "\"Hello world\"", "output": "Hello world" },
+        { "input": "\"123\"", "output": "123" }
+      ]
+    },
+    {
+      "category": "string",
+      "description": "should parse a string containing escaped characters",
+      "tests": [
         { "input": "\"\\\"\\\\\\/\\b\\f\\n\\r\\t\"", "output": "\"\\/\b\f\n\r\t" },
-        { "input": "\"\\u260E\"", "output": "\u260E" },
         { "input": "\"a \\n character\"", "output": "a \n character" }
       ]
     },
     {
       "category": "string",
-      "description": "should handle strings equaling a JSON delimiter",
-      "tests": [
-        { "input": "\"[\"", "output": "[" },
-        { "input": "\"]\"", "output": "]" },
-        { "input": "\"{\"", "output": "{" },
-        { "input": "\"}\"", "output": "}" },
-        { "input": "\":\"", "output": ":" },
-        { "input": "\",\"", "output": "," }
-      ]
-    },
-    {
-      "category": "string",
-      "description": "should handle unicode charactes in a string",
+      "description": "should handle utf-8 unicode characters in a string",
       "tests": [
         { "input": "\"★\"", "output": "★" },
-        { "input": "\"\uD83D\uDE00\"", "output": "😀" },
-        { "input": "\"\\ud83d\\ude00\"", "output": "\ud83d\ude00" },
+        { "input": "\"😀\"", "output": "😀" },
         { "input": "\"йнформация\"", "output": "йнформация" }
       ]
     },
@@ -332,11 +325,11 @@
       "category": "string",
       "description": "handles escaped unicode characters in a string",
       "tests": [
-        { "input": "\"\\u2605\"", "output": "\u2605" },
-        { "input": "\"\\ud83d\\ude00\"", "output": "\ud83d\ude00" },
+        { "input": "\"\\u260E\"", "output": "☎" },
+        { "input": "\"\\ud83d\\ude00\"", "output": "😀" },
         {
           "input": "\"\\u0439\\u043d\\u0444\\u043e\\u0440\\u043c\\u0430\\u0446\\u0438\\u044f\"",
-          "output": "\u0439\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f"
+          "output": "йнформация"
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.1/test-suite/stringify.test.json",
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/stringify.test.json",
   "groups": [
     {
       "category": "array",
@@ -285,8 +285,15 @@
       "description": "should stringify a string",
       "tests": [
         { "input": "Hello world", "output": "\"Hello world\"" },
-        { "input": "123", "output": "\"123\"" },
-        { "input": "∛", "output": "\"∛\"" }
+        { "input": "123", "output": "\"123\"" }
+      ]
+    },
+    {
+      "category": "string",
+      "description": "should stringify a string with unicode characters in utf-8",
+      "tests": [
+        { "input": "∛", "output": "\"∛\"" },
+        { "input": "😀", "output": "\"😀\"" }
       ]
     },
     {

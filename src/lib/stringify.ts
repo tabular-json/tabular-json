@@ -113,11 +113,9 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     const childIndent = indentation && indent ? indent + indentation : indent
     const colSeparator = indentation ? ', ' : ','
 
-    let str = ''
-
     const fields = collectFields(array)
 
-    str += isRoot ? '' : '---\n'
+    let str = isRoot ? '' : '---\n'
 
     const header = fields.map((field) => field.name)
     const rows = array.map((item) =>

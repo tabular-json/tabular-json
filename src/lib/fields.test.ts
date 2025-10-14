@@ -11,5 +11,7 @@ describe('collectNestedPaths', () => {
     expect(collectNestedPaths([{ a: { nested: 2 } }, { a: 1 }])).toEqual([['a']])
     expect(collectNestedPaths([{ a: [1, 2, 3] }])).toEqual([['a']])
     expect(collectNestedPaths([{ a: [{ b: 2 }] }])).toEqual([['a']])
+    expect(collectNestedPaths([{ a: null }])).toEqual([['a']])
+    expect(collectNestedPaths([{ a: null }, { a: { nested: 2 } }])).toEqual([['a', 'nested']])
   })
 })
