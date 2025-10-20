@@ -448,8 +448,8 @@
       "category": "empty",
       "description": "should throw an error in case of empty input",
       "tests": [
-        { "input": "", "throws": "JSON value expected but reached end of input at position 0" },
-        { "input": "  ", "throws": "JSON value expected but reached end of input at position 2" }
+        { "input": "", "throws": "Value expected but reached end of input at position 0" },
+        { "input": "  ", "throws": "Value expected but reached end of input at position 2" }
       ]
     }
   ]

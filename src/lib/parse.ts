@@ -495,7 +495,7 @@ export function parse(text: string): unknown {
   }
 
   function throwValueExpected() {
-    throw new SyntaxError(`JSON value expected ${gotAt()}`)
+    throw new SyntaxError(`Value expected ${gotAt()}`)
   }
 
   function throwInvalidCharacter(char: string) {
