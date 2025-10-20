@@ -53,17 +53,17 @@
     "prepublishOnly": "npm run test:ci && npm run lint && npm run build:lib"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.4",
-    "@astrojs/markdown-remark": "6.3.7",
+    "@astrojs/check": "0.9.5",
+    "@astrojs/markdown-remark": "6.3.8",
     "@astrojs/svelte": "7.2.0",
-    "@fortawesome/fontawesome-svg-core": "7.0.1",
-    "@fortawesome/free-brands-svg-icons": "7.0.1",
+    "@fortawesome/fontawesome-svg-core": "7.1.0",
+    "@fortawesome/free-brands-svg-icons": "7.1.0",
     "@types/adm-zip": "0.5.7",
     "@types/git-diff": "2.0.7",
-    "@types/node": "24.6.0",
+    "@types/node": "24.9.0",
     "adm-zip": "0.5.16",
     "ajv": "8.17.1",
-    "astro": "5.14.1",
+    "astro": "5.14.7",
     "del-cli": "7.0.0",
     "fracturedjsonjs": "4.1.1",
     "git-diff": "2.0.6",
@@ -73,9 +73,9 @@
     "prettier-plugin-svelte": "3.4.0",
     "rehype-autolink-headings": "7.1.0",
     "sass": "1.93.2",
-    "svelte": "5.39.6",
+    "svelte": "5.41.1",
     "svelte-awesome": "3.3.5",
-    "typescript": "5.9.2",
+    "typescript": "5.9.3",
     "vitest": "3.2.4"
   }
 }
