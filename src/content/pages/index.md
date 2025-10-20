@@ -48,7 +48,7 @@ Here is an example of Tabular-JSON data:
 }
 </code></pre>
 
-And here a table at root level, with streamable the rows:
+And here a table at root level, with streamable rows:
 
 <pre><code>"id", "name",  "address"."city", "address"."street"
 2,    "joe",   "New York",       "1st Ave"
