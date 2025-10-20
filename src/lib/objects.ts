@@ -1,4 +1,4 @@
-import type { NestedObject, Path } from './types.d.ts'
+import type { GenericObject, NestedObject, Path } from './types.d.ts'
 
 // The utils are largely copied from:
 // - https://github.com/josdejong/csv42
