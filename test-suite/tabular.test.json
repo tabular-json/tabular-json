@@ -1,0 +1,39 @@
+{
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/fields.test.json",
+  "groups": [
+    {
+      "description": "should test whether an array contains tabular data",
+      "function": "isTabular",
+      "tests": [
+        { "input": [], "output": false },
+        { "input": [1, 2, 3], "output": false },
+        { "input": ["text"], "output": false },
+        { "input": [{}, []], "output": false },
+        { "input": [{}, 2, {}], "output": false },
+        { "input": [{}, null, {}], "output": false },
+        { "input": {}, "output": false },
+        { "input": "text", "output": false },
+        { "input": [{}], "output": true },
+        { "input": [{}, {}], "output": true },
+        { "input": [{ "a": 2 }, { "b": 3 }, { "c": 3 }], "output": true }
+      ]
+    },
+    {
+      "description": "should collect the table fields from an array with tabular data",
+      "function": "collectFields",
+      "tests": [
+        { "input": [{}], "output": [] },
+        { "input": [{ "": 1 }], "output": [[""]] },
+        { "input": [{ "a": 1 }, { "a": 2 }], "output": [["a"]] },
+        { "input": [{ "a": 1 }, { "b": 2 }], "output": [["a"], ["b"]] },
+        { "input": [{ "a": 1 }, { "nested": { "b": 2 } }], "output": [["a"], ["nested", "b"]] },
+        { "input": [{ "a": 1 }, { "a": { "nested": 2 } }], "output": [["a"]] },
+        { "input": [{ "a": { "nested": 2 } }, { "a": 1 }], "output": [["a"]] },
+        { "input": [{ "a": [1, 2, 3] }], "output": [["a"]] },
+        { "input": [{ "a": [{ "b": 2 }] }], "output": [["a"]] },
+        { "input": [{ "a": null }], "output": [["a"]] },
+        { "input": [{ "a": null }, { "a": { "nested": 2 } }], "output": [["a", "nested"]] }
+      ]
+    }
+  ]
+}

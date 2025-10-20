@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/fields.test.json",
+  "type": "object",
+  "properties": {
+    "source": {
+      "const": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/fields.test.json"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "string" },
+          "function": { "type": "string" },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "input": {},
+                "output": {}
+              },
+              "required": ["input", "output"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["description", "function", "tests"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["source", "groups"],
+  "additionalProperties": false
+}

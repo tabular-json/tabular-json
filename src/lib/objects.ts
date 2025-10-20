@@ -3,6 +3,10 @@ import type { NestedObject, Path } from './types.d.ts'
 // The utils are largely copied from:
 // - https://github.com/josdejong/csv42
 
+export function isObject(value: unknown): value is GenericObject<unknown> {
+  return typeof value === 'object' && value !== null && value.constructor === Object // do not match on classes or Array
+}
+
 export function getIn(object: NestedObject, path: Path): unknown {
   let value: NestedObject | undefined = object
   let i = 0

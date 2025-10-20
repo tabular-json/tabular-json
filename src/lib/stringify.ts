@@ -1,7 +1,6 @@
 import type { Field, GenericObject, Path, ValueGetter } from './types.d.ts'
-import { isObject, isTabular } from './is.js'
-import { getIn } from './objects.js'
-import { collectNestedPaths } from './fields.js'
+import { getIn, isObject } from './objects.js'
+import { collectFields, isTabular } from './tabular.js'
 
 // The code of stringify is largely copied from:
 // - https://github.com/josdejong/lossless-json
@@ -113,7 +112,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     const childIndent = indentation && indent ? indent + indentation : indent
     const colSeparator = indentation ? ', ' : ','
 
-    const fields = collectFields(array)
+    const fields = getFields(array)
 
     let str = isRoot ? '' : '---\n'
 
@@ -202,8 +201,8 @@ function resolveIndentation(indentation: number | string | undefined): string | 
   return undefined
 }
 
-function collectFields(records: Array<unknown>): Field<unknown>[] {
-  return collectNestedPaths(records).map((path) => ({
+function getFields(records: Array<unknown>): Field<unknown>[] {
+  return collectFields(records).map((path) => ({
     name: stringifyField(path),
     getValue: createGetValue(path)
   }))
