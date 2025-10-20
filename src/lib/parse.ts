@@ -254,13 +254,13 @@ export function parse(text: string): unknown {
 
   function skipWhitespace() {
     while (skipWhitespaceChars() || skipLineComment() || skipBlockComment()) {
-      // repeat until no more whitespace or
+      // repeat until no more whitespace or comments
     }
   }
 
   function skipTableWhitespace() {
     while (skipTableWhitespaceChars() || skipLineComment() || skipBlockComment()) {
-      // repeat until no more whitespace or
+      // repeat until no more whitespace or comments
     }
   }
 

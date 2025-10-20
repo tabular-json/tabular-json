@@ -9,7 +9,8 @@
         { "input": "  { \n } \t ", "output": {} },
         { "input": "{\"a\": {}}", "output": { "a": {} } },
         { "input": "{\"a\": \"b\"}", "output": { "a": "b" } },
-        { "input": "{\"a\": 2}", "output": { "a": 2 } }
+        { "input": "{\"a\": 2}", "output": { "a": 2 } },
+        { "input": "{\n  \"a\": 2\n}", "output": { "a": 2 } }
       ]
     },
     {
@@ -40,6 +41,8 @@
       "description": "should parse an array",
       "tests": [
         { "input": "[]", "output": [] },
+        { "input": "[1,2,3]", "output": [1, 2, 3] },
+        { "input": "[\n1,\n  2,\n  3\n]", "output": [1, 2, 3] },
         { "input": " [ \n ] \t", "output": [] },
         { "input": "[{}]", "output": [{}] },
         { "input": "{\"a\":[]}", "output": { "a": [] } },
@@ -214,7 +217,7 @@
     },
     {
       "category": "table",
-      "description": "parse a root table containing nested arrays",
+      "description": "parse a table containing nested arrays",
       "tests": [
         {
           "input": "---\n\"id\", \"name\", \"score\"\n1, \"joe\", [5, 7]\n2, \"sarah\", [7, 7, 8]\n---",
@@ -227,7 +230,7 @@
     },
     {
       "category": "table",
-      "description": "parse a root table containing nested objects",
+      "description": "parse a root containing nested objects",
       "tests": [
         {
           "input": "---\n\"id\", \"name\", \"address\"\n1, \"Joe\", { \"city\": \"New York\", \"street\": \"1st Ave\" }\n2, \"Sarah\", { \"city\": \"Washington\", \"street\": \"18th Street NW\" }\n---",
