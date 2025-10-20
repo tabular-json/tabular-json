@@ -49,6 +49,60 @@ const updatedText = stringify(data, { indentation: 2, trailingCommas: false })
 // }
 ```
 
+## Python
+
+Documentation: https://github.com/tabular-json/tabular-json-python
+
+Install via PyPi:
+
+```
+pip install tabularjson
+```
+
+Usage:
+
+```python
+from tabularjson import parse, stringify, StringifyOptions
+
+text = """{
+    "id": 1,
+    "name": "Brandon",
+    "friends": ---
+    "id", "name"
+        2,    "Joe"
+        3,    "Sarah"
+    ---
+}
+"""
+
+data = parse(text)
+print(data)
+# {
+#     'id': 1,
+#     'name': 'Brandon',
+#     'friends': [
+#         {'id': 2, 'name': 'Joe'},
+#         {'id': 3, 'name': 'Sarah'}
+#     ]
+# }
+
+data["friends"].append({"id": 4, "name": "Alan"})
+
+options: StringifyOptions = {"indentation": 4, "trailingCommas": False}
+updatedText = stringify(data, options)
+print(updatedText)
+# {
+#     "id": 1,
+#     "name": "Brandon",
+#     "friends": ---
+#         "id", "name"
+#         2,    "Joe"
+#         3,    "Sarah"
+#         4,    "Alan"
+#     ---
+# }
+```
+
 ## How to implement support in a new language
 
 The [reference implementation in TypeScript](https://github.com/tabular-json/tabular-json/tree/main/src/lib) can be used to port support for Tabular-JSON in new programming languages. Also, the [ANTLR grammer of Tabular-JSON](/specification) can be used to generate a Tabular-JSON parser for the following languages: Java, C#, Python, JavaScript, TypeScript, Go, C++, Swift, PHP, DART.
