@@ -17,3 +17,9 @@ export type TableField = {
 export type NestedObject = { [key: string]: NestedObject | unknown }
 
 export type Path = (string | number)[]
+
+export type NonEmptyArray<T> = [T, ...T[]]
+
+export type TabularArray<T> = NonEmptyArray<Record<string, T>>
+
+export type TableStrategy = (array: TabularArray<T>) => boolean

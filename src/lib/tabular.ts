@@ -1,4 +1,4 @@
-import type { GenericObject, NestedObject, Path } from './types.d.ts'
+import type { NestedObject, Path, TabularArray } from './types.d.ts'
 import { isObject } from './objects.js'
 
 const leaf = Symbol()
@@ -8,7 +8,7 @@ type MergedObject = {
   [leaf]?: boolean | null
 }
 
-export function isTabular(value: unknown): value is Array<GenericObject<unknown>> {
+export function isTabular<T>(value: unknown): value is TabularArray<T> {
   return Array.isArray(value) && value.length > 0 && value.every(isObject)
 }
 
