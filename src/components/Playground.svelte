@@ -32,7 +32,7 @@
   let tabularJson = $state('')
   let tabularJsonError: string | undefined = $state(undefined)
 
-  let tableStrategy = $state(loadLocalStorage(playgroundOutputAsTable, 'noNestedTables'))
+  let tableStrategy = $state(loadLocalStorage(playgroundOutputAsTable, 'noNestedArrays'))
   let outputAsTable: OutputAsTable | undefined = $derived(tableStrategies[tableStrategy])
 
   const size = $derived(updateSize({ json, jsonError, tabularJson, tabularJsonError }))
