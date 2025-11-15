@@ -34,14 +34,21 @@
 
   const size = $derived(updateSize({ json, jsonError, tabularJson, tabularJsonError }))
 
+  let options = $derived(
+    tabularJsonBeautified
+      ? { indentation, trailingCommas, tableStrategy }
+      : { trailingCommas, tableStrategy }
+  )
+
   $effect(() => saveLocalStorage(playgroundTrailingCommas, trailingCommas))
 
   initialize(example1)
 
   function initialize(newJson: unknown) {
-    json = JSON.stringify(newJson, null, indentation)
-    tabularJson = stringify(newJson, { indentation, trailingCommas, outputTable: tableStrategy })
     tabularJsonBeautified = true
+
+    json = JSON.stringify(newJson, null, indentation)
+    tabularJson = stringify(newJson, options)
   }
 
   function percentage(a: number, b: number) {
@@ -55,9 +62,6 @@
     try {
       if (json.trim() !== '') {
         const parsed = JSON.parse(json)
-        const options = tabularJsonBeautified
-          ? { indentation, trailingCommas, tableStrategy }
-          : { trailingCommas, tableStrategy }
         tabularJson = stringify(parsed, options)
       } else {
         tabularJson = ''
@@ -168,8 +172,9 @@
   function beautifyTabularJson() {
     try {
       const json = parse(tabularJson)
-      tabularJson = stringify(json, { indentation, trailingCommas, outputTable: tableStrategy })
+
       tabularJsonBeautified = true
+      tabularJson = stringify(json, options)
     } catch (err) {
       alert(err.toString())
     }
@@ -178,8 +183,9 @@
   function minifyTabularJson() {
     try {
       const json = parse(tabularJson)
-      tabularJson = stringify(json, { trailingCommas, outputTable: tableStrategy })
+
       tabularJsonBeautified = false
+      tabularJson = stringify(json, options)
     } catch (err) {
       alert(err.toString())
     }
