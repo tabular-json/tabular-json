@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { Bench } from 'tinybench'
 import {
   stringify,
-  noLongFields,
+  noLongStrings,
   isHomogeneous,
   noNestedArrays,
   noNestedTables
@@ -16,24 +16,24 @@ const data = JSON.parse(
 const results = []
 
 const bench = new Bench({ time: 100, iterations: 50 })
-  .add('default (always) ', function () {
-    const res = stringify(data)
+  .add('always', function () {
+    const res = stringify(data, { outputTable: () => true })
     results.push(res)
   })
   .add('noNestedTables', function () {
-    const res = stringify(data, { tableStrategy: noNestedTables })
+    const res = stringify(data, { outputTable: noNestedTables })
     results.push(res)
   })
   .add('noNestedArrays', function () {
-    const res = stringify(data, { tableStrategy: noNestedArrays })
+    const res = stringify(data, { outputTable: noNestedArrays })
     results.push(res)
   })
   .add('isHomogeneous', function () {
-    const res = stringify(data, { tableStrategy: isHomogeneous })
+    const res = stringify(data, { outputTable: isHomogeneous })
     results.push(res)
   })
-  .add('noLongFields', function () {
-    const res = stringify(data, { tableStrategy: noLongFields })
+  .add('noLongStrings', function () {
+    const res = stringify(data, { outputTable: noLongStrings })
     results.push(res)
   })
 
