@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { Bench } from 'tinybench'
 import {
+  always,
   stringify,
   noLongStrings,
   isHomogeneous,
@@ -17,7 +18,7 @@ const results = []
 
 const bench = new Bench({ time: 100, iterations: 50 })
   .add('always', function () {
-    const res = stringify(data, { outputAsTable: () => true })
+    const res = stringify(data, { outputAsTable: always })
     results.push(res)
   })
   .add('noNestedTables', function () {

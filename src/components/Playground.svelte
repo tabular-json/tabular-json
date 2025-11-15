@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    always,
     isHomogeneous,
     noLongStrings,
     noNestedArrays,
@@ -17,10 +18,10 @@
   const indentation = 2
 
   const tableStrategies: Record<string, OutputAsTable> = {
-    always: () => true,
-    noNestedTables: noNestedTables,
-    noNestedArrays: noNestedArrays,
-    isHomogeneous: isHomogeneous,
+    always,
+    noNestedTables,
+    noNestedArrays,
+    isHomogeneous,
     noLongStrings: (table) => noLongStrings(table, 24)
   }
 

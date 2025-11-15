@@ -57,6 +57,10 @@ export function noLongStrings<T>(array: Table<T>, maxLength = 24) {
   return recurse(array)
 }
 
+export function always () {
+  return true
+}
+
 const leaf = Symbol()
 
 type MergedObject = {

@@ -1,6 +1,6 @@
 import type { Field, GenericObject, OutputAsTable, Path, ValueGetter } from './types.d.ts'
 import { getIn, isObject } from './objects.js'
-import { collectFields, isTable, noNestedTables } from './table.js'
+import { collectFields, isTable, noNestedArrays } from './table.js'
 
 // The code of stringify is largely copied from:
 // - https://github.com/josdejong/lossless-json
@@ -14,7 +14,7 @@ export interface StringifyOptions {
 
 export function stringify(json: unknown, options?: StringifyOptions): string {
   const globalIndentation = resolveIndentation(options?.indentation)
-  const outputAsTable = options?.outputAsTable ?? noNestedTables
+  const outputAsTable = options?.outputAsTable ?? noNestedArrays
 
   return stringifyValue(json, '', globalIndentation)
 

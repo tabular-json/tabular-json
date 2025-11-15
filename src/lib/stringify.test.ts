@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { stringify } from './stringify.js'
 import suite from '../../test-suite/stringify.test.json'
 import type { StringifyTestEnum, StringifyTestSuite } from '../../test-suite/stringify.test'
+import { always, noNestedTables } from './table.ts'
 
 function isTestEnum(test: unknown): test is StringifyTestEnum {
   return !!test && typeof (test as Record<string, unknown>)['input_enum'] === 'string'
@@ -58,6 +59,62 @@ for (const [category, testGroups] of Object.entries(testsByCategory)) {
     }
   })
 }
+
+describe('should specify option outputAsTable', function () {
+  const json = {
+    scores: [{ values: [1, 2, 3] }, { values: [5, 6, 7] }],
+    data: [
+      {
+        measurements: [
+          { x: 1, y: 3 },
+          { x: 2, y: 4 }
+        ]
+      }
+    ]
+  }
+
+  test('outputAsTable default (noNestedArrays)', () => {
+    // defaults to noNestedArrays
+    expect(stringify(json)).toEqual(
+      '{"scores":[{"values":[1,2,3]},{"values":[5,6,7]}],"data":[{"measurements":---\n' +
+        '"x","y"\n' +
+        '1,3\n' +
+        '2,4\n' +
+        '---}]}'
+    )
+  })
+
+  test('outputAsTable=noNestedTables', () => {
+    expect(stringify(json, { outputAsTable: noNestedTables })).toEqual(
+      '{"scores":---\n' +
+        '"values"\n' +
+        '[1,2,3]\n' +
+        '[5,6,7]\n' +
+        '---,"data":[{"measurements":---\n' +
+        '"x","y"\n' +
+        '1,3\n' +
+        '2,4\n' +
+        '---}]}'
+    )
+  })
+
+  test('outputAsTable=always', () => {
+    expect(stringify(json, { outputAsTable: always })).toEqual(
+      '{"scores":---\n' +
+        '"values"\n' +
+        '[1,2,3]\n' +
+        '[5,6,7]\n' +
+        '---,"data":---\n' +
+        '"measurements"\n' +
+        '---\n' +
+        '"x","y"\n' +
+        '1,3\n' +
+        '2,4\n' +
+        '---\n' +
+        '---}'
+    )
+  })
+})
 
 test('should handle unsupported data types in stringify', function () {
   expect(stringify(undefined)).toEqual('')
