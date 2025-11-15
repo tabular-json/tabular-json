@@ -3,8 +3,8 @@ import parseTestSuite from '../../test-suite/parse.test.json'
 import parseSchema from '../../test-suite/parse.test.schema.json'
 import stringifyTestSuite from '../../test-suite/stringify.test.json'
 import stringifySchema from '../../test-suite/stringify.test.schema.json'
-import tabularTestSuite from '../../test-suite/tabular.test.json'
-import tabularSchema from '../../test-suite/tabular.test.schema.json'
+import tableTestSuite from '../../test-suite/table.test.json'
+import tableSchema from '../../test-suite/table.test.schema.json'
 import Ajv from 'ajv'
 
 describe('test-suite', () => {
@@ -24,9 +24,9 @@ describe('test-suite', () => {
     expect(valid).toEqual(true)
   })
 
-  test('should validate the tabular test-suite against its JSON schema', () => {
+  test('should validate the table test-suite against its JSON schema', () => {
     const ajv = new Ajv({ allErrors: false })
-    const valid = ajv.validate(tabularSchema, tabularTestSuite)
+    const valid = ajv.validate(tableSchema, tableTestSuite)
 
     expect(ajv.errors).toEqual(null)
     expect(valid).toEqual(true)

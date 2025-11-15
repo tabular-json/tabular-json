@@ -1,16 +1,27 @@
 import { describe, expect, test } from 'vitest'
-import suite from '../../test-suite/tabular.test.json'
-import type { TabularTestSuite } from '../../test-suite/tabular.test'
-import { collectFields, isTabular } from './tabular.ts'
+import suite from '../../test-suite/table.test.json'
+import type { TableTestSuite } from '../../test-suite/table.test'
+import {
+  isTable,
+  collectFields,
+  noNestedTables,
+  noNestedArrays,
+  noLongStrings,
+  isHomogeneous
+} from './table.js'
 
 const testsByCategory = Object.groupBy(suite.groups, (group) => group.function) as Record<
   string,
-  TabularTestSuite['groups']
+  TableTestSuite['groups']
 >
 
 const functions = {
-  isTabular,
-  collectFields
+  isTable,
+  collectFields,
+  noNestedTables,
+  noNestedArrays,
+  noLongStrings,
+  isHomogeneous
 }
 
 for (const [category, testGroups] of Object.entries(testsByCategory)) {

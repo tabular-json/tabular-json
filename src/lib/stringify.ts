@@ -1,7 +1,6 @@
-import type { Field, GenericObject, Path, TableStrategy, ValueGetter } from './types.d.ts'
+import type { Field, GenericObject, OutputTable, Path, ValueGetter } from './types.d.ts'
 import { getIn, isObject } from './objects.js'
-import { collectFields, isTabular } from './tabular.js'
-import { always } from './tableStrategies.js'
+import { isTable, noNestedTables, collectFields } from './table.js'
 
 // The code of stringify is largely copied from:
 // - https://github.com/josdejong/lossless-json
@@ -10,14 +9,12 @@ import { always } from './tableStrategies.js'
 export interface StringifyOptions {
   indentation?: number | string
   trailingCommas?: boolean
-  tableStrategy?: TableStrategy
+  outputTable?: OutputTable
 }
 
 export function stringify(json: unknown, options?: StringifyOptions): string {
   const globalIndentation = resolveIndentation(options?.indentation)
-  const tableStrategy = options?.tableStrategy ?? always
-
-  console.log('stringify table strategy', options)
+  const outputTable = options?.outputTable ?? noNestedTables
 
   return stringifyValue(json, '', globalIndentation)
 
@@ -55,7 +52,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     }
 
     // Table
-    if (isTabular(value) && tableStrategy(value)) {
+    if (isTable(value) && outputTable(value)) {
       return stringifyTable(value, indent, indentation)
     }
 

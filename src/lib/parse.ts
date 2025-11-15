@@ -1,5 +1,5 @@
 import type { SetValue, TableField } from './types.d.ts'
-import { setIn } from './objects.js'
+import { isDeepEqual, setIn } from './objects.js'
 
 /**
  * Parse a string containing Tabular-JSON.
@@ -554,29 +554,8 @@ function isNonZeroDigit(code: number): boolean {
   return code >= codeOne && code <= codeNine
 }
 
-export function isValidStringCharacter(code: number): boolean {
+function isValidStringCharacter(code: number): boolean {
   return code >= 0x20 && code <= 0x10ffff
-}
-
-export function isDeepEqual(a: unknown, b: unknown): boolean {
-  if (a === b) {
-    return true
-  }
-
-  if (Array.isArray(a) && Array.isArray(b)) {
-    return a.length === b.length && a.every((item, index) => isDeepEqual(item, b[index]))
-  }
-
-  if (isObject(a) && isObject(b)) {
-    const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])]
-    return keys.every((key) => isDeepEqual(a[key], b[key]))
-  }
-
-  return false
-}
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null
 }
 
 // map with all escape characters

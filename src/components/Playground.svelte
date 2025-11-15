@@ -1,27 +1,26 @@
 <script lang="ts">
   import {
-    always,
-    hasShortFields,
+    noLongStrings,
     isHomogeneous,
     noNestedArrays,
     noNestedTables,
     parse,
-    stringify
+    stringify,
+    type OutputTable
   } from '../lib'
   import { example1, example2, example3, example4 } from './examples.ts'
   import { loadLocalStorage, saveLocalStorage } from '../runes/localStorageState.svelte.ts'
-  import type { TableStrategy } from '../lib/types'
 
   const playgroundTrailingCommas = 'playground-trailing-commas'
 
   const indentation = 2
 
-  const tableStrategies: Array<{ name: string; test: TableStrategy }> = [
-    { name: 'always', test: always },
+  const tableStrategies: Array<{ name: string; test: OutputTable }> = [
+    { name: 'always', test: () => true },
     { name: 'noNestedTables', test: noNestedTables },
     { name: 'noNestedArrays', test: noNestedArrays },
     { name: 'isHomogeneous', test: isHomogeneous },
-    { name: 'hasShortFields', test: hasShortFields }
+    { name: 'noLongStrings', test: noLongStrings }
   ]
 
   let trailingCommas = $state(loadLocalStorage(playgroundTrailingCommas, true))
@@ -31,7 +30,7 @@
   let tabularJson = $state('')
   let tabularJsonError: string | undefined = $state(undefined)
 
-  let tableStrategy = $state<TableStrategy>(always)
+  let tableStrategy = $state<OutputTable>(noNestedTables)
 
   const size = $derived(updateSize({ json, jsonError, tabularJson, tabularJsonError }))
 
@@ -41,7 +40,7 @@
 
   function initialize(newJson: unknown) {
     json = JSON.stringify(newJson, null, indentation)
-    tabularJson = stringify(newJson, { indentation, trailingCommas, tableStrategy })
+    tabularJson = stringify(newJson, { indentation, trailingCommas, outputTable: tableStrategy })
     tabularJsonBeautified = true
   }
 
@@ -169,7 +168,7 @@
   function beautifyTabularJson() {
     try {
       const json = parse(tabularJson)
-      tabularJson = stringify(json, { indentation, trailingCommas, tableStrategy })
+      tabularJson = stringify(json, { indentation, trailingCommas, outputTable: tableStrategy })
       tabularJsonBeautified = true
     } catch (err) {
       alert(err.toString())
@@ -179,7 +178,7 @@
   function minifyTabularJson() {
     try {
       const json = parse(tabularJson)
-      tabularJson = stringify(json, { trailingCommas, tableStrategy })
+      tabularJson = stringify(json, { trailingCommas, outputTable: tableStrategy })
       tabularJsonBeautified = false
     } catch (err) {
       alert(err.toString())
