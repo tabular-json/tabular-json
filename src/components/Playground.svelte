@@ -1,27 +1,28 @@
 <script lang="ts">
   import {
-    noLongStrings,
     isHomogeneous,
+    noLongStrings,
     noNestedArrays,
     noNestedTables,
+    type OutputAsTable,
     parse,
-    stringify,
-    type OutputTable
+    stringify
   } from '../lib'
   import { example1, example2, example3, example4 } from './examples.ts'
   import { loadLocalStorage, saveLocalStorage } from '../runes/localStorageState.svelte.ts'
 
   const playgroundTrailingCommas = 'playground-trailing-commas'
+  const playgroundOutputAsTable = 'playground-output-as-table'
 
   const indentation = 2
 
-  const tableStrategies: Array<{ name: string; test: OutputTable }> = [
-    { name: 'always', test: () => true },
-    { name: 'noNestedTables', test: noNestedTables },
-    { name: 'noNestedArrays', test: noNestedArrays },
-    { name: 'isHomogeneous', test: isHomogeneous },
-    { name: 'noLongStrings', test: noLongStrings }
-  ]
+  const tableStrategies: Record<string, OutputAsTable> = {
+    always: () => true,
+    noNestedTables: noNestedTables,
+    noNestedArrays: noNestedArrays,
+    isHomogeneous: isHomogeneous,
+    noLongStrings: (table) => noLongStrings(table, 24)
+  }
 
   let trailingCommas = $state(loadLocalStorage(playgroundTrailingCommas, true))
   let tabularJsonBeautified = $state(true)
@@ -30,17 +31,19 @@
   let tabularJson = $state('')
   let tabularJsonError: string | undefined = $state(undefined)
 
-  let tableStrategy = $state<OutputTable>(noNestedTables)
+  let tableStrategy = $state(loadLocalStorage(playgroundOutputAsTable, 'noNestedTables'))
+  let outputAsTable: OutputAsTable | undefined = $derived(tableStrategies[tableStrategy])
 
   const size = $derived(updateSize({ json, jsonError, tabularJson, tabularJsonError }))
 
   let options = $derived(
     tabularJsonBeautified
-      ? { indentation, trailingCommas, tableStrategy }
-      : { trailingCommas, tableStrategy }
+      ? { indentation, trailingCommas, outputAsTable }
+      : { trailingCommas, outputAsTable }
   )
 
   $effect(() => saveLocalStorage(playgroundTrailingCommas, trailingCommas))
+  $effect(() => saveLocalStorage(playgroundOutputAsTable, tableStrategy))
 
   initialize(example1)
 
@@ -232,8 +235,8 @@
         <label>
           Table strategy:
           <select bind:value={tableStrategy} onchange={() => toggleOption()}>
-            {#each tableStrategies as strategy}
-              <option value={strategy.test}>{strategy.name}</option>
+            {#each Object.keys(tableStrategies) as strategy}
+              <option value={strategy}>{strategy}</option>
             {/each}
           </select>
         </label>

@@ -86,7 +86,8 @@ type stringify = (json: unknown, options?: StringifyOptions) => string
 
 interface StringifyOptions {
   indentation?: number | string
-  trailingCommas?: boolean
+  trailingCommas?: boolean,
+  outputAsTable?: <T>(table: Table<T>) => boolean
 }
 ```
 

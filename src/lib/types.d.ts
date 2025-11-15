@@ -22,4 +22,4 @@ export type NonEmptyArray<T> = [T, ...T[]]
 
 export type Table<T> = NonEmptyArray<Record<string, T>>
 
-export type OutputTable = (array: Table<T>) => boolean
+export type OutputAsTable = (table: Table<T>) => boolean

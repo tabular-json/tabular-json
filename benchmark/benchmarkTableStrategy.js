@@ -17,23 +17,23 @@ const results = []
 
 const bench = new Bench({ time: 100, iterations: 50 })
   .add('always', function () {
-    const res = stringify(data, { outputTable: () => true })
+    const res = stringify(data, { outputAsTable: () => true })
     results.push(res)
   })
   .add('noNestedTables', function () {
-    const res = stringify(data, { outputTable: noNestedTables })
+    const res = stringify(data, { outputAsTable: noNestedTables })
     results.push(res)
   })
   .add('noNestedArrays', function () {
-    const res = stringify(data, { outputTable: noNestedArrays })
+    const res = stringify(data, { outputAsTable: noNestedArrays })
     results.push(res)
   })
   .add('isHomogeneous', function () {
-    const res = stringify(data, { outputTable: isHomogeneous })
+    const res = stringify(data, { outputAsTable: isHomogeneous })
     results.push(res)
   })
   .add('noLongStrings', function () {
-    const res = stringify(data, { outputTable: noLongStrings })
+    const res = stringify(data, { outputAsTable: noLongStrings })
     results.push(res)
   })
 
