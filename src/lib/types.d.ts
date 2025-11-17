@@ -20,6 +20,6 @@ export type Path = (string | number)[]
 
 export type NonEmptyArray<T> = [T, ...T[]]
 
-export type Table<T> = NonEmptyArray<Record<string, T>>
+export type TabularData<T> = NonEmptyArray<Record<string, T>>
 
-export type OutputAsTable = (table: Table<T>) => boolean
+export type OutputAsTable = (tabularData: TabularData<T>) => boolean

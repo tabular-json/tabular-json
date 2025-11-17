@@ -1,64 +1,8 @@
-import type { NestedObject, Path, Table } from './types.d.ts'
+import type { NestedObject, Path, TabularData } from './types.d.ts'
 import { isObject } from './objects.js'
 
-export function isTable<T>(value: unknown): value is Table<T> {
+export function isTabular<T>(value: unknown): value is TabularData<T> {
   return Array.isArray(value) && value.length > 0 && value.every(isObject)
-}
-
-export function noNestedArrays<T>(array: Table<T>) {
-  function recurseObject(object: Record<string, unknown>) {
-    return Object.values(object).every((value) => {
-      return Array.isArray(value) ? false : isObject(value) ? recurseObject(value) : true
-    })
-  }
-
-  return array.every(recurseObject)
-}
-
-export function noNestedTables<T>(array: Table<T>) {
-  function recurse(value: unknown) {
-    return isTable(value)
-      ? false
-      : Array.isArray(value)
-        ? value.every(recurse)
-        : isObject(value)
-          ? Object.values(value).every(recurse)
-          : true
-  }
-
-  return array.every(recurse)
-}
-
-export function isHomogeneous<T>(array: Table<T>) {
-  // FIXME: change equalKeys into deepEqualKeys
-  function equalKeys(a: Record<string, T>, b: Record<string, T>): boolean {
-    const aKeys = Object.keys(a)
-    const bKeys = Object.keys(b)
-
-    return aKeys.length === bKeys.length && aKeys.every((key) => key in b)
-  }
-
-  const firstItem = array[0]
-
-  return array.every((item) => equalKeys(item, firstItem))
-}
-
-export function noLongStrings<T>(array: Table<T>, maxLength = 24) {
-  function recurse(value: unknown) {
-    return Array.isArray(value)
-      ? value.every(recurse)
-      : isObject(value)
-        ? Object.values(value).every(recurse)
-        : typeof value === 'string'
-          ? value.length < maxLength
-          : true
-  }
-
-  return recurse(array)
-}
-
-export function always () {
-  return true
 }
 
 const leaf = Symbol()

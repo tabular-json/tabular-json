@@ -2,11 +2,11 @@ export { parse } from './parse.js'
 export { stringify, type StringifyOptions } from './stringify.js'
 export {
   always,
-  isTable,
+  isTabular,
   noNestedArrays,
   noNestedTables,
   isHomogeneous,
   noLongStrings
-} from './table.js'
+} from './tabular.js'
 
-export type { Table, OutputAsTable, NonEmptyArray } from './types.d.ts'
+export type { TabularData, OutputAsTable, NonEmptyArray } from './types.d.ts'
