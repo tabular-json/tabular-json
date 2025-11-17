@@ -91,6 +91,126 @@ interface StringifyOptions {
 }
 ```
 
+The option `outputAsTable` is explained in detail in the section [Output as table](#output-as-table) below.
+
+### Output as table
+
+A table is an array with at least one item, where every item is an object. Stringifying tabular data as a table results in the smallest output, but it is not always the most readable way. For example having nested tables inside a table is not very readable. Also, having a table containing a field like "comments" or "description" which contains long texts results in a very wide column, making the formatted table hard to read.
+
+Depending on your use case, you can configure a strategy for when to output tabular data as a table. This can be done using the option `outputAsTable`, which is invoked for all tabular data in the input json and returns true when the data should be stringified as a table. 
+
+The `tabular-json` library comes with a number of built-in utility functions that can be used with `outputAsTable`
+
+- `always(table)`: always serialize as table, also when the table contains nested arrays.
+- `noNestedArrays(table)`: serialize as table when the table does not contain nested arrays. This is the default value.
+- `noNestedTables(table)`: serialize as table when the table does not contain nested tables. Allows nested arrays when the contain primitive values like numbers or strings.
+- `isHomogeneous(table)`: serialize as table when the structure is homogeneous: every item has the exact same keys.
+- `noLongStrings(table [, maxSize])`: serialize as table when the table does not contain long text fields
+
+There an example:
+
+```js
+import { stringify, noLongStrings } from 'tabular-json'
+
+const zoo = {
+  careTakers: [
+    { id: 1001, name: 'Joe' },
+    { id: 1002, name: 'Sarah' }
+  ],
+  animals: [
+    {
+      animalId: 1,
+      name: 'Elephant',
+      description: 'Elephants are the largest living land animals.'
+    },
+    {
+      animalId: 2,
+      name: 'Giraffe',
+      description: 'The giraffe is the tallest living terrestrial animal on Earth'
+    }
+  ]
+}
+
+// Use the default table strategy
+console.log(stringify(zoo, { indentation: 2 }))
+// {
+//   "careTakers": ---
+//     "id", "name"
+//     1001, "Joe"
+//     1002, "Sarah"
+//   ---,
+//   "animals": ---
+//     "animalId", "name",     "description"
+//     1,          "Elephant", "Elephants are the largest living land animals."
+//     2,          "Giraffe",  "The giraffe is the tallest living terrestrial animal on Earth"
+//   ---
+// }
+
+// Do not output tables containing long strings as table
+const maxSize = 20
+console.log(
+  stringify(zoo, {
+    indentation: 2,
+    outputAsTable: (table) => noLongStrings(table, maxSize)
+  })
+)
+// {
+//   "careTakers": ---
+//     "id", "name"
+//     1001, "Joe"
+//     1002, "Sarah"
+//   ---,
+//   "animals": [
+//     {
+//       "animalId": 1,
+//       "name": "Elephant",
+//       "description": "Elephants are the largest living land animals."
+//     },
+//     {
+//       "animalId": 2,
+//       "name": "Giraffe",
+//       "description": "The giraffe is the tallest living terrestrial animal on Earth"
+//     }
+//   ]
+// }
+```
+
+Besides using the build-in examples, You can implement your own function to determine when to output a table. If you have multiple tables and only some must be serialized as table, you can write some logic to determine which table you're dealing with, for example by looking at the fields of the first item of the array:
+
+```js
+function isAnimalTable(table) {
+  return 'animalId' in table[0]
+}
+
+console.log(
+  stringify(zoo, {
+    indentation: 2,
+    outputAsTable: (table) => !isAnimalTable(table)
+  })
+)
+// {
+//   "careTakers": ---
+//     "id", "name"
+//     1001, "Joe"
+//     1002, "Sarah"
+//   ---,
+//   "animals": [
+//     {
+//       "animalId": 1,
+//       "name": "Elephant",
+//       "description": "Elephants are the largest living land animals."
+//     },
+//     {
+//       "animalId": 2,
+//       "name": "Giraffe",
+//       "description": "The giraffe is the tallest living terrestrial animal on Earth"
+//     }
+//   ]
+// }
+```
+
+
+
 ## Test Suite
 
 There is a JSON based Test Suite available that can be used to ensure that implementations of Tabular-JSON match the official specification, see [Tabular-JSON Test Suite](/test-suite/README.md).
