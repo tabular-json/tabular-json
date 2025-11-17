@@ -24,7 +24,7 @@ describe('test-suite', () => {
     expect(valid).toEqual(true)
   })
 
-  test('should validate the table test-suite against its JSON schema', () => {
+  test('should validate the tabular test-suite against its JSON schema', () => {
     const ajv = new Ajv({ allErrors: false })
     const valid = ajv.validate(tabularSchema, tabularTestSuite)
 
