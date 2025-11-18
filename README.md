@@ -86,7 +86,7 @@ type stringify = (json: unknown, options?: StringifyOptions) => string
 
 interface StringifyOptions {
   indentation?: number | string
-  trailingCommas?: boolean,
+  trailingCommas?: boolean
   outputAsTable?: <T>(tabularData: Tabular<T>) => boolean
 }
 ```
@@ -97,7 +97,7 @@ The option `outputAsTable` is explained in detail in the section [Output as tabl
 
 Tabular data is an array containing at least one item and where every item is an object. Stringifying tabular data as a table results in the smallest output, but it is not always the most readable way. For example having nested tables inside a table is not very readable. Also, having a table containing a field like "comments" or "description" which contains long texts results in a very wide column, making the formatted table hard to read.
 
-Depending on your use case, you can configure a strategy for when to output tabular data as a table. This can be done using the option `outputAsTable`, which is invoked for all tabular data in the input json and returns true when the data should be stringified as a table. 
+Depending on your use case, you can configure a strategy for when to output tabular data as a table. This can be done using the option `outputAsTable`, which is invoked for all tabular data in the input json and returns true when the data should be stringified as a table.
 
 The `tabular-json` library comes with a number of built-in utility functions that can be used with `outputAsTable`
 
@@ -208,8 +208,6 @@ console.log(
 //   ]
 // }
 ```
-
-
 
 ## Test Suite
 

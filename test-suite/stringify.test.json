@@ -289,8 +289,8 @@
       "tests": [
         {
           "input": [
-            { "id": 1, "scores": [{ "value": 7.2}, { "value": 6.1}, { "value": 8.1}] },
-            { "id": 2, "scores": [{ "value": 7.7}] }
+            { "id": 1, "scores": [{ "value": 7.2 }, { "value": 6.1 }, { "value": 8.1 }] },
+            { "id": 2, "scores": [{ "value": 7.7 }] }
           ],
           "output": "[\n  {\n    \"id\": 1,\n    \"scores\": ---\n      \"value\"\n      7.2\n      6.1\n      8.1\n    ---\n  },\n  {\n    \"id\": 2,\n    \"scores\": ---\n      \"value\"\n      7.7\n    ---\n  }\n]"
         }
