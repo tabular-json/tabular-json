@@ -1,7 +1,7 @@
-import type { Field, GenericObject, OutputAsTable, Path, ValueGetter } from './types.d.ts'
+import type { Field, OutputAsTable, Path, ValueGetter } from './types.d.ts'
 import { getIn, isObject } from './objects.js'
 import { collectFields, isTabular } from './tabular.js'
-import { noNestedArrays } from './tableProperties.ts'
+import { noNestedArrays } from './tableProperties.js'
 
 // The code of stringify is largely copied from:
 // - https://github.com/josdejong/lossless-json
@@ -64,7 +64,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
     // Object
     if (isObject(value)) {
-      return stringifyObject(value as GenericObject<unknown>, indent, indentation)
+      return stringifyObject(value as Record<string, unknown>, indent, indentation)
     }
 
     return ''
@@ -146,7 +146,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
   }
 
   function stringifyObject(
-    object: GenericObject<unknown>,
+    object: Record<string, unknown>,
     indent: string,
     indentation: string | undefined
   ): string {
@@ -214,10 +214,10 @@ function getFields(records: Array<unknown>): Field<unknown>[] {
 function createGetValue<T>(path: Path): ValueGetter<T> {
   if (path.length === 1) {
     const key = path[0]
-    return (item) => (item as GenericObject<unknown>)[key]
+    return (item) => (item as Record<string, unknown>)[key]
   }
 
-  return (item) => getIn(item as GenericObject<unknown>, path)
+  return (item) => getIn(item as Record<string, unknown>, path)
 }
 
 function stringifyStringValue(value: string): string {

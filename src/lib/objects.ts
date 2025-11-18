@@ -1,9 +1,9 @@
-import type { GenericObject, NestedObject, Path } from './types.d.ts'
+import type { NestedObject, Path } from './types.d.ts'
 
 // The utils are largely copied from:
 // - https://github.com/josdejong/csv42
 
-export function isObject(value: unknown): value is GenericObject<unknown> {
+export function isObject<T>(value: unknown): value is Record<string, T> {
   return typeof value === 'object' && value !== null && value.constructor === Object // do not match on classes or Array
 }
 
