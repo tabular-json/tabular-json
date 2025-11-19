@@ -14,28 +14,21 @@ const data = JSON.parse(
   String(readFileSync(import.meta.dirname + '/../data/unece_country_overview.json'))
 )
 
-const results = []
-
-const bench = new Bench({ time: 100, iterations: 50 })
+const bench = new Bench({ time: 100, iterations: 100 })
   .add('always', function () {
-    const res = stringify(data, { outputAsTable: always })
-    results.push(res)
+    stringify(data, { outputAsTable: always })
   })
   .add('noNestedTables', function () {
-    const res = stringify(data, { outputAsTable: noNestedTables })
-    results.push(res)
+    stringify(data, { outputAsTable: noNestedTables })
   })
   .add('noNestedArrays', function () {
-    const res = stringify(data, { outputAsTable: noNestedArrays })
-    results.push(res)
+    stringify(data, { outputAsTable: noNestedArrays })
   })
   .add('isHomogeneous', function () {
-    const res = stringify(data, { outputAsTable: isHomogeneous })
-    results.push(res)
+    stringify(data, { outputAsTable: isHomogeneous })
   })
   .add('noLongStrings', function () {
-    const res = stringify(data, { outputAsTable: noLongStrings })
-    results.push(res)
+    stringify(data, { outputAsTable: noLongStrings })
   })
 
 console.log('Table Strategy performance')
