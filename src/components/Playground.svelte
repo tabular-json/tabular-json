@@ -17,13 +17,25 @@
 
   const indentation = 2
 
-  const tableStrategies: Record<string, OutputAsTable> = {
-    always,
-    noNestedTables,
-    noNestedArrays,
-    isHomogeneous,
-    noLongStrings: (table) => noLongStrings(table, 24)
+  interface TableStrategyOption {
+    id: string
+    name: string
+    outputAsTable: OutputAsTable
   }
+
+  const noNestedArraysId = 'noNestedArrays' // the default strategy
+
+  const tableStrategyOptions: TableStrategyOption[] = [
+    { id: 'always', name: 'Always', outputAsTable: always },
+    { id: 'noNestedTables', name: 'When no nested tables', outputAsTable: noNestedTables },
+    {
+      id: noNestedArraysId,
+      name: 'When no nested arrays (default)',
+      outputAsTable: noNestedArrays
+    },
+    { id: 'isHomogeneous', name: 'When homogeneous', outputAsTable: isHomogeneous },
+    { id: 'noLongStrings', name: 'When no long string values', outputAsTable: noLongStrings }
+  ]
 
   let trailingCommas = $state(loadLocalStorage(playgroundTrailingCommas, true))
   let tabularJsonBeautified = $state(true)
@@ -32,8 +44,10 @@
   let tabularJson = $state('')
   let tabularJsonError: string | undefined = $state(undefined)
 
-  let tableStrategy = $state(loadLocalStorage(playgroundOutputAsTable, 'noNestedArrays'))
-  let outputAsTable: OutputAsTable | undefined = $derived(tableStrategies[tableStrategy])
+  let tableStrategy = $state(loadLocalStorage(playgroundOutputAsTable, noNestedArraysId))
+  let outputAsTable: OutputAsTable | undefined = $derived(
+    tableStrategyOptions.find((option) => option.id === tableStrategy)?.outputAsTable
+  )
 
   const size = $derived(updateSize({ json, jsonError, tabularJson, tabularJsonError }))
 
@@ -234,10 +248,10 @@
           <h2>Tabular-JSON</h2>
         </div>
         <label>
-          Table strategy:
+          Output as table:
           <select bind:value={tableStrategy} onchange={() => toggleOption()}>
-            {#each Object.keys(tableStrategies) as strategy}
-              <option value={strategy}>{strategy}</option>
+            {#each tableStrategyOptions as option}
+              <option value={option.id}>{option.name}</option>
             {/each}
           </select>
         </label>
@@ -288,6 +302,7 @@
       display: inline;
       margin: 0;
       padding: 0;
+      white-space: nowrap;
     }
 
     .columns {
