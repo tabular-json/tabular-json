@@ -2,8 +2,11 @@ export const example1 = {
   name: 'rob',
   hobbies: ['swimming', 'biking'],
   friends: [
-    { id: 2, name: 'joe', address: { city: 'New York', street: '1st Ave' } },
-    { id: 3, name: 'sarah', address: { city: 'Washington', street: '18th Street NW' } }
+    { id: 1, name: 'Chris', address: { city: 'Washington', street: '1745 T Street Southeast' } },
+    { id: 2, name: 'Emily', address: { city: 'Louisville', street: '6007 Applegate Lane' } },
+    { id: 3, name: 'Joe', address: { city: 'Grass Valley', street: '560 Penstock Drive' } },
+    { id: 4, name: 'Kevin', address: { city: 'Manchester', street: '150 Carter Street' } },
+    { id: 5, name: 'Michelle', address: { city: 'Louisville', street: '2721 Lindsay Avenue' } }
   ],
   address: { city: 'New York', street: '1st Ave' }
 }
@@ -17,66 +20,7 @@ export const example2 = [
   { name: 'Robert', age: 45, city: 'Manhattan' }
 ]
 
-export const example3 = {
-  name: 'Richard',
-  age: 33,
-  hobbies: ['Biking', 'Gaming', 'Squash'],
-  friends: [
-    {
-      name: 'Chris',
-      age: 23,
-      address: { street: '1745 T Street Southeast', city: 'Washington' }
-    },
-    {
-      name: 'Emily',
-      age: 19,
-      address: { street: '6007 Applegate Lane', city: 'Louisville' }
-    },
-    {
-      name: 'Joe',
-      age: 32,
-      address: { street: '560 Penstock Drive', city: 'Grass Valley' }
-    },
-    {
-      name: 'Kevin',
-      age: 19,
-      address: { street: '150 Carter Street', city: 'Manchester' }
-    },
-    {
-      name: 'Michelle',
-      age: 27,
-      address: { street: '2721 Lindsay Avenue', city: 'Louisville' }
-    },
-    {
-      name: 'Robert',
-      age: 45,
-      address: { street: '18 Densmore Drive', city: 'Essex' }
-    },
-    {
-      name: 'Sarah',
-      age: 31,
-      address: { street: '637 Britannia Drive', city: 'Vallejo' }
-    },
-    {
-      name: 'Brandon',
-      age: 42,
-      address: { street: '5601 West Crocus Drive', city: 'Glendale' }
-    },
-    {
-      name: 'Rachel',
-      age: 55,
-      address: { street: '5403 Illinois Avenue', city: 'Nashville' }
-    },
-    {
-      name: 'Christina',
-      age: 22,
-      address: { street: '8821 West Myrtle Avenue', city: 'Glendale' }
-    }
-  ],
-  address: { street: '5114 Greentree Drive', city: 'Nashville' }
-}
-
-export const example4 = [
+export const example3 = [
   {
     id: 1,
     firstName: 'Terry',
@@ -438,3 +382,60 @@ export const example4 = [
     }
   }
 ]
+
+export const example4 = {
+  info: "Use this example to try out different options for 'Output as table'",
+  stations: [
+    {
+      id: 2045,
+      name: 'Measurement station Hook of Holland',
+      location: [4.1249487, 51.973389]
+    },
+    {
+      id: 1171,
+      name: 'Measurement station Spijkenisse',
+      location: [4.3384327, 51.856544]
+    },
+    {
+      id: 1309,
+      name: 'Measurement station Dordrecht',
+      description: 'Newly installed in March 2025',
+      location: [4.6665547, 51.820341]
+    }
+  ],
+  runs: [
+    {
+      id: '6bc552b3-4679-44b6-b547-0f097fa8737f',
+      stationId: 1171,
+      measurements: [
+        { datetime: '2025-11-18T18:20:40.676Z', temperature: 23.1, humidity: 0.4 },
+        { datetime: '2025-11-18T19:20:40.200Z', temperature: 22.9, humidity: 0.45 },
+        { datetime: '2025-11-18T20:20:40.177Z', temperature: 22.5, humidity: 0.55 },
+        { datetime: '2025-11-18T21:20:40.301Z', temperature: 22.63, humidity: 0.5 }
+      ]
+    },
+    {
+      id: 'd06f2380-d049-409f-93c4-dde609e35a58',
+      stationId: 2045,
+      measurements: [
+        { datetime: '2025-11-19T07:00:00.300Z', temperature: 21.3, humidity: 0.6 },
+        { datetime: '2025-11-19T08:00:00.116Z', temperature: 21.2, humidity: 0.6 },
+        { datetime: '2025-11-19T09:00:00.340Z', temperature: 21.2, humidity: 0.55 },
+        { datetime: '2025-11-19T10:00:00.407Z', temperature: 22.1, humidity: 0.5 },
+        { datetime: '2025-11-19T10:00:00.407Z', temperature: 22.2, humidity: 0.45 },
+        { datetime: '2025-11-19T10:00:00.407Z', temperature: 22.7, humidity: 0.5 }
+      ]
+    },
+    {
+      id: 'ca35a186-1adf-4600-8058-1d9a2610109a',
+      stationId: 1309,
+      measurements: [
+        { datetime: '2025-11-17T15:15:00.267Z', temperature: 23.0, humidity: 0.4 },
+        { datetime: '2025-11-17T16:15:00.001Z', temperature: 23.8, humidity: 0.45 },
+        { datetime: '2025-11-17T17:15:00.204Z', temperature: 24.1, humidity: 0.45 },
+        { datetime: '2025-11-17T18:15:00.441Z', temperature: 24.0, humidity: 0.4 },
+        { datetime: '2025-11-17T19:15:00.380Z', temperature: 23.5, humidity: 0.4 }
+      ]
+    }
+  ]
+}
