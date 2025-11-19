@@ -14,9 +14,9 @@ export interface StringifyOptions {
 export function stringify(json: unknown, options?: StringifyOptions): string {
   const globalIndentation = resolveIndentation(options?.indentation)
 
-  return stringifyValue(json, '', globalIndentation)
+  return stringifyValue(json, '', !!globalIndentation)
 
-  function stringifyValue(value: unknown, indent: string, indentation: string | undefined): string {
+  function stringifyValue(value: unknown, indent: string, doIndent: boolean): string {
     // number
     if (typeof value === 'number') {
       if (isNaN(value)) {
@@ -56,50 +56,46 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
     // Array (test after Table!)
     if (Array.isArray(value)) {
-      return stringifyArray(value, indent, indentation)
+      return stringifyArray(value, indent, doIndent)
     }
 
     // Object
     if (isObject(value)) {
-      return stringifyObject(value as GenericObject<unknown>, indent, indentation)
+      return stringifyObject(value as GenericObject<unknown>, indent, doIndent)
     }
 
     return ''
   }
 
-  function stringifyArray(
-    array: Array<unknown>,
-    indent: string,
-    indentation: string | undefined
-  ): string {
+  function stringifyArray(array: Array<unknown>, indent: string, doIndent: boolean): string {
     if (array.length === 0) {
       return '[]'
     }
 
-    const childIndent = indentation ? indent + indentation : indent
-    let str = indentation ? '[\n' : '['
+    const childIndent = doIndent ? indent + globalIndentation : indent
+    let str = doIndent ? '[\n' : '['
 
     for (let i = 0; i < array.length; i++) {
       const item = array[i]
 
-      if (indentation) {
+      if (doIndent) {
         str += childIndent
       }
 
       if (typeof item !== 'undefined' && typeof item !== 'function') {
-        str += stringifyValue(item, childIndent, indentation)
+        str += stringifyValue(item, childIndent, doIndent)
       } else {
         str += 'null'
       }
 
       if (i < array.length - 1) {
-        str += indentation ? ',\n' : ','
+        str += doIndent ? ',\n' : ','
       } else if (options?.trailingCommas) {
         str += ','
       }
     }
 
-    str += indentation ? '\n' + indent + ']' : ']'
+    str += doIndent ? '\n' + indent + ']' : ']'
     return str
   }
 
@@ -112,11 +108,11 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
     let str = isRoot ? '' : '---\n'
 
-    // we do not pass indentation to `stringifyValue` so nested objects/arrays are compacted
-    // table itself is always using globalIndentation
+    // We pass doIndent=false so nested objects/arrays are not indented over multiple lines.
+    // Table and nested tables are always using beautified when globalIndentation is
     const header = fields.map((field) => field.name)
     const rows = array.map((item) =>
-      fields.map((field) => stringifyValue(field.getValue(item), childIndent, undefined))
+      fields.map((field) => stringifyValue(field.getValue(item), childIndent, false))
     )
 
     if (globalIndentation) {
@@ -143,7 +139,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
   function stringifyObject(
     object: GenericObject<unknown>,
     indent: string,
-    indentation: string | undefined
+    doIndent: boolean
   ): string {
     if (typeof object.toJSON === 'function') {
       return stringify(object.toJSON(), options)
@@ -155,23 +151,23 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       return '{}'
     }
 
-    const childIndent = indentation ? indent + indentation : indent
-    let str = indentation ? '{\n' : '{'
+    const childIndent = doIndent ? indent + globalIndentation : indent
+    let str = doIndent ? '{\n' : '{'
 
     entries.forEach(([key, value], index) => {
       const keyStr = stringifyStringValue(key)
-      str += indentation ? childIndent + keyStr + ': ' : keyStr + ':'
+      str += doIndent ? childIndent + keyStr + ': ' : keyStr + ':'
 
-      str += stringifyValue(value, childIndent, indentation)
+      str += stringifyValue(value, childIndent, doIndent)
 
       if (index < entries.length - 1) {
-        str += indentation ? ',\n' : ','
+        str += doIndent ? ',\n' : ','
       } else if (options?.trailingCommas) {
         str += ','
       }
     })
 
-    str += indentation ? '\n' + indent + '}' : '}'
+    str += doIndent ? '\n' + indent + '}' : '}'
     return str
   }
 
