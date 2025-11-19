@@ -74,13 +74,20 @@ describe('should specify option outputAsTable', function () {
   }
 
   test('outputAsTable default (noNestedArrays)', () => {
-    // defaults to noNestedArrays
+    // defaults to "always"
     expect(stringify(json)).toEqual(
-      '{"scores":[{"values":[1,2,3]},{"values":[5,6,7]}],"data":[{"measurements":---\n' +
+      '{"scores":---\n' +
+        '"values"\n' +
+        '[1,2,3]\n' +
+        '[5,6,7]\n' +
+        '---,"data":---\n' +
+        '"measurements"\n' +
+        '---\n' +
         '"x","y"\n' +
         '1,3\n' +
         '2,4\n' +
-        '---}]}'
+        '---\n' +
+        '---}'
     )
   })
 

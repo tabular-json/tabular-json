@@ -23,16 +23,10 @@
     outputAsTable: OutputAsTable
   }
 
-  const noNestedArraysId = 'noNestedArrays' // the default strategy
-
   const tableStrategyOptions: TableStrategyOption[] = [
-    { id: 'always', name: 'Always', outputAsTable: always },
+    { id: 'always', name: 'Always (default)', outputAsTable: always },
     { id: 'noNestedTables', name: 'When no nested tables', outputAsTable: noNestedTables },
-    {
-      id: noNestedArraysId,
-      name: 'When no nested arrays (default)',
-      outputAsTable: noNestedArrays
-    },
+    { id: 'noNestedArrays', name: 'When no nested arrays', outputAsTable: noNestedArrays },
     { id: 'isHomogeneous', name: 'When homogeneous', outputAsTable: isHomogeneous },
     { id: 'noLongStrings', name: 'When no long string values', outputAsTable: noLongStrings }
   ]
@@ -44,7 +38,7 @@
   let tabularJson = $state('')
   let tabularJsonError: string | undefined = $state(undefined)
 
-  let tableStrategy = $state(loadLocalStorage(playgroundOutputAsTable, noNestedArraysId))
+  let tableStrategy = $state(loadLocalStorage(playgroundOutputAsTable, tableStrategyOptions[0].id))
   let outputAsTable: OutputAsTable | undefined = $derived(
     tableStrategyOptions.find((option) => option.id === tableStrategy)?.outputAsTable
   )

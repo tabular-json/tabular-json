@@ -101,8 +101,8 @@ Depending on your use case, you can configure a strategy for when to output tabu
 
 The `tabular-json` library comes with a number of built-in utility functions that can be used with `outputAsTable`
 
-- `always(tabularData)`: always serialize tabular data as a table, also when the data contains nested arrays.
-- `noNestedArrays(tabularData)`: serialize tabular data as a table when the data does not contain nested arrays. This is the default value of option `outputAsTable`.
+- `always(tabularData)`: always serialize tabular data as a table, also when the data contains nested arrays. This is the default value of option `outputAsTable`.
+- `noNestedArrays(tabularData)`: serialize tabular data as a table when the data does not contain nested arrays.
 - `noNestedTables(tabularData)`: serialize tabular data as a table when the data does not contain nested tables. Allows nested arrays when the contain primitive values like numbers or strings.
 - `isHomogeneous(tabularData)`: serialize tabular data as a table when the structure is homogeneous, that is every item has the exact same keys and nested keys.
 - `noLongStrings(tabularData [, maxSize])`: serialize tabular data as a table when the data does not contain long text fields
