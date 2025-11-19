@@ -176,6 +176,31 @@
     },
     {
       "category": "table",
+      "description": "should stringify a table in a table with indentation",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": {
+            "data": [
+              {
+                "id": 1,
+                "name": "Joe",
+                "friends": [
+                  { "id": 3, "name": "Kevin" },
+                  { "id": 2, "name": "Sarah" }
+                ]
+              },
+              { "id": 2, "name": "Sarah", "friends": [] }
+            ]
+          },
+          "output": "{\n  \"data\": ---\n    \"id\", \"name\",  \"friends\"\n    1,    \"Joe\",   ---\n      \"id\", \"name\"\n      3,    \"Kevin\"\n      2,    \"Sarah\"\n    ---\n    2,    \"Sarah\", []\n  ---\n}"
+        }
+      ]
+    },
+    {
+      "category": "table",
       "description": "should stringify a table with custom indentation characters",
       "options": {
         "indentation": "~~"

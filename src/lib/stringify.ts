@@ -51,7 +51,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
     // Table
     if (isTabular(value)) {
-      return stringifyTable(value, indent, indentation)
+      return stringifyTable(value, indent)
     }
 
     // Array (test after Table!)
@@ -103,25 +103,23 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     return str
   }
 
-  function stringifyTable(
-    array: Array<unknown>,
-    indent: string,
-    indentation: string | undefined
-  ): string {
+  function stringifyTable(array: Array<unknown>, indent: string): string {
     const isRoot = array === json
-    const childIndent = indentation && indent ? indent + indentation : indent
-    const colSeparator = indentation ? ', ' : ','
+    const childIndent = globalIndentation && indent ? indent + globalIndentation : indent
+    const colSeparator = globalIndentation ? ', ' : ','
 
     const fields = getFields(array)
 
     let str = isRoot ? '' : '---\n'
 
+    // we do not pass indentation to `stringifyValue` so nested objects/arrays are compacted
+    // table itself is always using globalIndentation
     const header = fields.map((field) => field.name)
     const rows = array.map((item) =>
       fields.map((field) => stringifyValue(field.getValue(item), childIndent, undefined))
     )
 
-    if (indentation) {
+    if (globalIndentation) {
       const widths = calculateColumnWidths(header, rows)
 
       str += childIndent + formatRow(header, widths)
