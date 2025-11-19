@@ -95,11 +95,11 @@ The option `outputAsTable` is explained in detail in the section [Output as tabl
 
 ### Output as table
 
-Tabular data is an array containing at least one item and where every item is an object. Stringifying tabular data as a table results in the smallest output, but it is not always the most readable way. For example having nested tables inside a table is not very readable. Also, having a table containing a field like "comments" or "description" which contains long texts results in a very wide column, making the formatted table hard to read.
+Data is tabular when it is an array containing at least one item, where every item is an object. Stringifying tabular data as a table almost always results in the smallest output, but it is not always the most readable way. For example having nested tables inside a table is not very readable. Also, having a table containing a field like "comments" or "description" which contains long texts results in a very wide column, making the formatted table hard to read.
 
-Depending on your use case, you can configure a strategy for when to output tabular data as a table. This can be done using the option `outputAsTable`, which is invoked for all tabular data in the input json and returns true when the data should be stringified as a table.
+Depending on your use case, you can configure a strategy for when to output tabular data as a table. This can be done using the option `outputAsTable`. The function `outputAsTable` is invoked for all tabular data in the input json and returns true when the data should be stringified as a table.
 
-The `tabular-json` library comes with a number of built-in utility functions that can be used with `outputAsTable`
+The `tabular-json` library comes with a number of built-in utility functions that can be used with `outputAsTable`:
 
 - `always(tabularData)`: always serialize tabular data as a table, also when the data contains nested arrays. This is the default value of option `outputAsTable`.
 - `noNestedArrays(tabularData)`: serialize tabular data as a table when the data does not contain nested arrays.
@@ -112,7 +112,7 @@ There an example:
 ```js
 import { stringify, noLongStrings } from 'tabular-json'
 
-const zoo = {
+const data = {
   careTakers: [
     { id: 1001, name: 'Joe' },
     { id: 1002, name: 'Sarah' }
@@ -132,7 +132,7 @@ const zoo = {
 }
 
 // Use the default table strategy
-console.log(stringify(zoo, { indentation: 2 }))
+console.log(stringify(data, { indentation: 2 }))
 // {
 //   "careTakers": ---
 //     "id", "name"
@@ -149,7 +149,7 @@ console.log(stringify(zoo, { indentation: 2 }))
 // Do not output tables containing long strings as table
 const maxSize = 20
 console.log(
-  stringify(zoo, {
+  stringify(data, {
     indentation: 2,
     outputAsTable: (tabularData) => noLongStrings(tabularData, maxSize)
   })
@@ -175,15 +175,16 @@ console.log(
 // }
 ```
 
-Besides using the build-in examples, You can implement your own function to determine when to output a table. If you have multiple tables and only some of them must be serialized as table, you can for example write some logic to determine which table you're dealing with by looking at the fields of the first item of the array:
+Besides using the build-in examples, You can implement your own function to determine when to output tabular data as a table. If you have multiple tables and only some of them must be serialized as table, you can for example write some logic to determine which table you're dealing with by looking at the fields of the first item of the array:
 
 ```js
 function isAnimalTable(tabularData) {
   return 'animalId' in tabularData[0]
 }
 
+// Using the same data as in the previous example
 console.log(
-  stringify(zoo, {
+  stringify(data, {
     indentation: 2,
     outputAsTable: (tabularData) => !isAnimalTable(tabularData)
   })

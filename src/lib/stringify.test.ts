@@ -3,6 +3,7 @@ import { stringify } from './stringify.js'
 import suite from '../../test-suite/stringify.test.json'
 import type { StringifyTestEnum, StringifyTestSuite } from '../../test-suite/stringify.test'
 import { always, noNestedTables } from './tableProperties.js'
+import { noNestedArrays } from '../../lib'
 
 function isTestEnum(test: unknown): test is StringifyTestEnum {
   return !!test && typeof (test as Record<string, unknown>)['input_enum'] === 'string'
@@ -73,8 +74,7 @@ describe('should specify option outputAsTable', function () {
     ]
   }
 
-  test('outputAsTable default (noNestedArrays)', () => {
-    // defaults to "always"
+  test('outputAsTable: always (default)', () => {
     expect(stringify(json)).toEqual(
       '{"scores":---\n' +
         '"values"\n' +
@@ -91,7 +91,7 @@ describe('should specify option outputAsTable', function () {
     )
   })
 
-  test('outputAsTable=noNestedTables', () => {
+  test('outputAsTable: noNestedTables', () => {
     expect(stringify(json, { outputAsTable: noNestedTables })).toEqual(
       '{"scores":---\n' +
         '"values"\n' +
@@ -105,20 +105,13 @@ describe('should specify option outputAsTable', function () {
     )
   })
 
-  test('outputAsTable=always', () => {
-    expect(stringify(json, { outputAsTable: always })).toEqual(
-      '{"scores":---\n' +
-        '"values"\n' +
-        '[1,2,3]\n' +
-        '[5,6,7]\n' +
-        '---,"data":---\n' +
-        '"measurements"\n' +
-        '---\n' +
+  test('outputAsTable: noNestedArrays', () => {
+    expect(stringify(json, { outputAsTable: noNestedArrays })).toEqual(
+      '{"scores":[{"values":[1,2,3]},{"values":[5,6,7]}],"data":[{"measurements":---\n' +
         '"x","y"\n' +
         '1,3\n' +
         '2,4\n' +
-        '---\n' +
-        '---}'
+        '---}]}'
     )
   })
 })
