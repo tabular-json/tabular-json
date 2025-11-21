@@ -111,8 +111,8 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
     let str = isRoot ? '' : '---\n'
 
-    // We pass doIndent=false so nested objects/arrays are not indented over multiple lines.
-    // Table and nested tables are always using beautified when globalIndentation is
+    // We pass doIndent=false so nested objects/arrays are not formatted over multiple lines.
+    // Nested tables though are always indented (when globalIndentation is set).
     const header = fields.map((field) => field.name)
     const rows = array.map((item) =>
       fields.map((field) => stringifyValue(field.getValue(item), childIndent, false))

@@ -2,17 +2,17 @@ import type { TabularData } from './types'
 import { isObject } from './objects.js'
 import { isTabular } from './tabular.js'
 
-export function noNestedArrays<T>(array: TabularData<T>) {
+export function noNestedArrays<T>(tabularData: TabularData<T>) {
   function recurseObject(object: Record<string, unknown>) {
     return Object.values(object).every((value) => {
       return Array.isArray(value) ? false : isObject(value) ? recurseObject(value) : true
     })
   }
 
-  return array.every(recurseObject)
+  return tabularData.every(recurseObject)
 }
 
-export function noNestedTables<T>(array: TabularData<T>) {
+export function noNestedTables<T>(tabularData: TabularData<T>) {
   function recurse(value: unknown) {
     return isTabular(value)
       ? false
@@ -23,13 +23,13 @@ export function noNestedTables<T>(array: TabularData<T>) {
           : true
   }
 
-  return array.every(recurse)
+  return tabularData.every(recurse)
 }
 
-export function isHomogeneous<T>(array: TabularData<T>) {
-  const firstItem = array[0]
+export function isHomogeneous<T>(tabularData: TabularData<T>) {
+  const firstItem = tabularData[0]
 
-  return array.every((item) => deepEqualObjectKeys(item, firstItem))
+  return tabularData.every((item) => deepEqualObjectKeys(item, firstItem))
 }
 
 function deepEqualKeys(a: unknown, b: unknown): boolean {
@@ -57,17 +57,11 @@ function deepEqualObjectKeys(a: Record<string, unknown>, b: Record<string, unkno
   const aKeys = Object.keys(a)
   const bKeys = Object.keys(b)
 
-  if (aKeys.length !== bKeys.length || aKeys.some((key) => !(key in b))) {
+  if (aKeys.length !== bKeys.length) {
     return false
   }
 
-  for (const key of aKeys) {
-    if (!deepEqualKeys(a[key], b[key])) {
-      return false
-    }
-  }
-
-  return true
+  return  aKeys.every(key => key in b && deepEqualKeys(a[key], b[key]))
 }
 
 function deepEqualArrayKeys(a: Array<unknown>, b: Array<unknown>): boolean {
@@ -84,7 +78,7 @@ function deepEqualArrayKeys(a: Array<unknown>, b: Array<unknown>): boolean {
   return true
 }
 
-export function noLongStrings<T>(array: TabularData<T>, maxLength = 24) {
+export function noLongStrings<T>(tabularData: TabularData<T>, maxLength = 24) {
   function recurse(value: unknown) {
     return isObject(value)
       ? Object.values(value).every(recurse)
@@ -95,9 +89,9 @@ export function noLongStrings<T>(array: TabularData<T>, maxLength = 24) {
           : true
   }
 
-  return recurse(array)
+  return recurse(tabularData)
 }
 
-export function always() {
+export function always<T>(_tabularData: TabularData<T>) {
   return true
 }

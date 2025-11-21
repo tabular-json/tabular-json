@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { isHomogeneous, noLongStrings, noNestedArrays, noNestedTables } from './tableProperties.ts'
+import { always, isHomogeneous, noLongStrings, noNestedArrays, noNestedTables } from './tableProperties.ts'
 import type { TabularData } from './types'
 
 describe('should test whether a table does not contain nested arrays', () => {
@@ -84,6 +84,10 @@ describe('should test whether a table does not contain long string values', () =
       expect(noLongStrings(input)).toBe(output)
     })
   }
+})
+
+test('should test function always', () => {
+  expect(always([{}])).toBe(true)
 })
 
 test('should test whether a table does not contain values with long strings with a custom maxSize', () => {
