@@ -2,8 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { stringify } from './stringify.js'
 import suite from '../../test-suite/stringify.test.json'
 import type { StringifyTestEnum, StringifyTestSuite } from '../../test-suite/stringify.test'
-import { always, noNestedTables } from './tableProperties.js'
-import { noNestedArrays } from '../../lib'
+import { noNestedTables, noNestedArrays } from './tableProperties.js'
 
 function isTestEnum(test: unknown): test is StringifyTestEnum {
   return !!test && typeof (test as Record<string, unknown>)['input_enum'] === 'string'
