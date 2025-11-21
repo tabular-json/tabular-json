@@ -60,7 +60,7 @@ And here a table at root level, with streamable rows:
 So what are the ingredients of Tabular-JSON?
 
 - Take JSON.
-- Add support for CSV-like tables. Nested tables are wrapped in a `---` block. Tables supports nested fields.
+- Add support for CSV-like tables. Tables are wrapped in a `---` block (except at root level), and they support nested objects.
 - Add support for trailing commas to make it more streaming-friendly.
 - Add support for positive infinity (`inf`), negative infinity (`-inf`), and `nan`.
 - Add support for line comments (`// ...`) and block comments (`/* ... */`).
@@ -144,7 +144,7 @@ Tabular-JSON can be used to stream data, but in general it isn't a suitable repl
 
 ## Status
 
-There is a JavaScript/TypeScript library available, but the data format has to be implemented in a more couple of languages (like Python). In order to facilitate this, a JSON based test suite has to be implemented. Furthermore, there is need for plugins for IDE's like VS Code and Intellij to get syntax highlighting.
+There is a JavaScript/TypeScript and a Python library available. The data format has to be implemented in a more couple of languages. In order to facilitate this, a JSON based test suite has to be implemented. Furthermore, there is need for plugins for IDE's like VS Code and Intellij to get syntax highlighting.
 
 ## References
 
