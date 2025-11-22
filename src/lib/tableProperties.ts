@@ -61,7 +61,7 @@ function deepEqualObjectKeys(a: Record<string, unknown>, b: Record<string, unkno
     return false
   }
 
-  return  aKeys.every(key => key in b && deepEqualKeys(a[key], b[key]))
+  return aKeys.every((key) => key in b && deepEqualKeys(a[key], b[key]))
 }
 
 function deepEqualArrayKeys(a: Array<unknown>, b: Array<unknown>): boolean {
