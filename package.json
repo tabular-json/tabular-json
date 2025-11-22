@@ -54,16 +54,16 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.5",
-    "@astrojs/markdown-remark": "6.3.8",
-    "@astrojs/svelte": "7.2.0",
+    "@astrojs/markdown-remark": "6.3.9",
+    "@astrojs/svelte": "7.2.2",
     "@fortawesome/fontawesome-svg-core": "7.1.0",
     "@fortawesome/free-brands-svg-icons": "7.1.0",
     "@types/adm-zip": "0.5.7",
     "@types/git-diff": "2.0.7",
-    "@types/node": "24.9.0",
+    "@types/node": "24.10.1",
     "adm-zip": "0.5.16",
     "ajv": "8.17.1",
-    "astro": "5.14.7",
+    "astro": "5.16.0",
     "del-cli": "7.0.0",
     "fracturedjsonjs": "4.1.1",
     "git-diff": "2.0.6",
@@ -72,11 +72,11 @@
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-svelte": "3.4.0",
     "rehype-autolink-headings": "7.1.0",
-    "sass": "1.93.2",
-    "svelte": "5.41.1",
+    "sass": "1.94.2",
+    "svelte": "5.43.14",
     "svelte-awesome": "3.3.5",
     "tinybench": "5.1.0",
     "typescript": "5.9.3",
-    "vitest": "3.2.4"
+    "vitest": "4.0.13"
   }
 }
