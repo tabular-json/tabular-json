@@ -1,11 +1,36 @@
 <script lang="ts">
-  import { stringify, parse } from '../lib'
+  import {
+    always,
+    isHomogeneous,
+    noLongStrings,
+    noNestedArrays,
+    noNestedTables,
+    type OutputAsTable,
+    parse,
+    stringify
+  } from '../lib'
   import { example1, example2, example3, example4 } from './examples.ts'
   import { loadLocalStorage, saveLocalStorage } from '../runes/localStorageState.svelte.ts'
 
   const playgroundTrailingCommas = 'playground-trailing-commas'
+  const playgroundOutputAsTable = 'playground-output-as-table'
 
   const indentation = 2
+
+  interface TableStrategyOption {
+    id: string
+    name: string
+    outputAsTable: OutputAsTable
+  }
+
+  const tableStrategyOptions: TableStrategyOption[] = [
+    { id: 'always', name: 'Always (default)', outputAsTable: always },
+    { id: 'noNestedTables', name: 'When no nested tables', outputAsTable: noNestedTables },
+    { id: 'noNestedArrays', name: 'When no nested arrays', outputAsTable: noNestedArrays },
+    { id: 'isHomogeneous', name: 'When homogeneous', outputAsTable: isHomogeneous },
+    { id: 'noLongStrings', name: 'When no long string values', outputAsTable: noLongStrings }
+  ]
+
   let trailingCommas = $state(loadLocalStorage(playgroundTrailingCommas, true))
   let tabularJsonBeautified = $state(true)
   let json = $state('')
@@ -13,16 +38,29 @@
   let tabularJson = $state('')
   let tabularJsonError: string | undefined = $state(undefined)
 
+  let tableStrategy = $state(loadLocalStorage(playgroundOutputAsTable, tableStrategyOptions[0].id))
+  let outputAsTable: OutputAsTable | undefined = $derived(
+    tableStrategyOptions.find((option) => option.id === tableStrategy)?.outputAsTable
+  )
+
   const size = $derived(updateSize({ json, jsonError, tabularJson, tabularJsonError }))
 
+  let options = $derived(
+    tabularJsonBeautified
+      ? { indentation, trailingCommas, outputAsTable }
+      : { trailingCommas, outputAsTable }
+  )
+
   $effect(() => saveLocalStorage(playgroundTrailingCommas, trailingCommas))
+  $effect(() => saveLocalStorage(playgroundOutputAsTable, tableStrategy))
 
   initialize(example1)
 
   function initialize(newJson: unknown) {
-    json = JSON.stringify(newJson, null, indentation)
-    tabularJson = stringify(newJson, { indentation, trailingCommas })
     tabularJsonBeautified = true
+
+    json = JSON.stringify(newJson, null, indentation)
+    tabularJson = stringify(newJson, options)
   }
 
   function percentage(a: number, b: number) {
@@ -36,7 +74,6 @@
     try {
       if (json.trim() !== '') {
         const parsed = JSON.parse(json)
-        const options = tabularJsonBeautified ? { indentation, trailingCommas } : { trailingCommas }
         tabularJson = stringify(parsed, options)
       } else {
         tabularJson = ''
@@ -147,8 +184,9 @@
   function beautifyTabularJson() {
     try {
       const json = parse(tabularJson)
-      tabularJson = stringify(json, { indentation, trailingCommas })
+
       tabularJsonBeautified = true
+      tabularJson = stringify(json, options)
     } catch (err) {
       alert(err.toString())
     }
@@ -157,14 +195,15 @@
   function minifyTabularJson() {
     try {
       const json = parse(tabularJson)
-      tabularJson = stringify(json, { trailingCommas })
+
       tabularJsonBeautified = false
+      tabularJson = stringify(json, options)
     } catch (err) {
       alert(err.toString())
     }
   }
 
-  function toggleTrailingCommas() {
+  function toggleOption() {
     if (tabularJsonBeautified) {
       beautifyTabularJson()
     } else {
@@ -202,12 +241,17 @@
         <div class="left">
           <h2>Tabular-JSON</h2>
         </div>
+        <label>
+          Output as table:
+          <select bind:value={tableStrategy} onchange={() => toggleOption()}>
+            {#each tableStrategyOptions as option}
+              <option value={option.id}>{option.name}</option>
+            {/each}
+          </select>
+        </label>
         <label
-          ><input
-            type="checkbox"
-            bind:checked={trailingCommas}
-            onchange={() => toggleTrailingCommas()}
-          /> Trailing commas</label
+          ><input type="checkbox" bind:checked={trailingCommas} onchange={() => toggleOption()} /> Trailing
+          commas</label
         >
         <button type="button" onclick={() => beautifyTabularJson()}>Beautify</button>
         <button type="button" onclick={() => minifyTabularJson()}>Minify</button>
@@ -252,6 +296,7 @@
       display: inline;
       margin: 0;
       padding: 0;
+      white-space: nowrap;
     }
 
     .columns {

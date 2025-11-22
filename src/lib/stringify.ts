@@ -1,6 +1,7 @@
-import type { Field, GenericObject, Path, ValueGetter } from './types.d.ts'
+import type { Field, OutputAsTable, Path, ValueGetter } from './types.d.ts'
 import { getIn, isObject } from './objects.js'
 import { collectFields, isTabular } from './tabular.js'
+import { always } from './tableProperties.js'
 
 // The code of stringify is largely copied from:
 // - https://github.com/josdejong/lossless-json
@@ -9,10 +10,12 @@ import { collectFields, isTabular } from './tabular.js'
 export interface StringifyOptions {
   indentation?: number | string
   trailingCommas?: boolean
+  outputAsTable?: OutputAsTable
 }
 
 export function stringify(json: unknown, options?: StringifyOptions): string {
   const globalIndentation = resolveIndentation(options?.indentation)
+  const outputAsTable = options?.outputAsTable ?? always
 
   return stringifyValue(json, '', !!globalIndentation)
 
@@ -50,7 +53,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     }
 
     // Table
-    if (isTabular(value)) {
+    if (isTabular(value) && outputAsTable(value)) {
       return stringifyTable(value, indent)
     }
 
@@ -61,7 +64,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
     // Object
     if (isObject(value)) {
-      return stringifyObject(value as GenericObject<unknown>, indent, doIndent)
+      return stringifyObject(value as Record<string, unknown>, indent, doIndent)
     }
 
     return ''
@@ -101,15 +104,15 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
   function stringifyTable(array: Array<unknown>, indent: string): string {
     const isRoot = array === json
-    const childIndent = globalIndentation && indent ? indent + globalIndentation : indent
+    const childIndent = globalIndentation && !isRoot ? indent + globalIndentation : indent
     const colSeparator = globalIndentation ? ', ' : ','
 
     const fields = getFields(array)
 
     let str = isRoot ? '' : '---\n'
 
-    // We pass doIndent=false so nested objects/arrays are not indented over multiple lines.
-    // Table and nested tables are always using beautified when globalIndentation is
+    // We pass doIndent=false so nested objects/arrays are not formatted over multiple lines.
+    // Nested tables though are always indented (when globalIndentation is set).
     const header = fields.map((field) => field.name)
     const rows = array.map((item) =>
       fields.map((field) => stringifyValue(field.getValue(item), childIndent, false))
@@ -137,7 +140,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
   }
 
   function stringifyObject(
-    object: GenericObject<unknown>,
+    object: Record<string, unknown>,
     indent: string,
     doIndent: boolean
   ): string {
@@ -205,10 +208,10 @@ function getFields(records: Array<unknown>): Field<unknown>[] {
 function createGetValue<T>(path: Path): ValueGetter<T> {
   if (path.length === 1) {
     const key = path[0]
-    return (item) => (item as GenericObject<unknown>)[key]
+    return (item) => (item as Record<string, unknown>)[key]
   }
 
-  return (item) => getIn(item as GenericObject<unknown>, path)
+  return (item) => getIn(item as Record<string, unknown>, path)
 }
 
 function stringifyStringValue(value: string): string {

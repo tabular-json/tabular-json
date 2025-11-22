@@ -291,7 +291,7 @@
     },
     {
       "category": "table",
-      "description": "should stringify a nested table with nested arrays",
+      "description": "should stringify a root table with nested arrays",
       "options": {
         "indentation": 2
       },
@@ -302,6 +302,58 @@
             { "id": 2, "scores": [7.7] }
           ],
           "output": "\"id\", \"scores\"\n1,    [7.2,6.1,8.1]\n2,    [7.7]\n"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a table with nested arrays",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": {
+            "data": [
+              { "id": 1, "scores": [7.2, 6.1, 8.1] },
+              { "id": 2, "scores": [7.7] }
+            ]
+          },
+          "output": "{\n  \"data\": ---\n    \"id\", \"scores\"\n    1,    [7.2,6.1,8.1]\n    2,    [7.7]\n  ---\n}"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a root table with nested tables",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": [
+            { "id": 1, "scores": [{ "value": 7.2 }, { "value": 6.1 }, { "value": 8.1 }] },
+            { "id": 2, "scores": [{ "value": 7.7 }] }
+          ],
+          "output": "\"id\", \"scores\"\n1,    ---\n  \"value\"\n  7.2\n  6.1\n  8.1\n---\n2,    ---\n  \"value\"\n  7.7\n---\n"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "should stringify a nested table with nested tables",
+      "options": {
+        "indentation": 2
+      },
+      "tests": [
+        {
+          "input": {
+            "data": [
+              { "id": 1, "scores": [{ "value": 7.2 }, { "value": 6.1 }, { "value": 8.1 }] },
+              { "id": 2, "scores": [{ "value": 7.7 }] }
+            ]
+          },
+          "output": "{\n  \"data\": ---\n    \"id\", \"scores\"\n    1,    ---\n      \"value\"\n      7.2\n      6.1\n      8.1\n    ---\n    2,    ---\n      \"value\"\n      7.7\n    ---\n  ---\n}"
         }
       ]
     },
