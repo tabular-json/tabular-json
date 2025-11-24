@@ -226,7 +226,12 @@ function calculateColumnWidths(header: string[], rows: string[][]): number[] {
   return rows
     .reduce(
       (widths, row) => {
-        return row.map((field, i) => Math.max(widths[i], field.length))
+        return row.map((field, i) => {
+          // Recon with the case of a nested table which has multiple lines.
+          // We set the width to zero as a simple solution.
+          const width = field.includes('\n') ? 0 : field.length
+          return Math.max(widths[i], width)
+        })
       },
       header.map((field) => field.length)
     )
