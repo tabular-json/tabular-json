@@ -363,7 +363,7 @@
               "finished": false
             }
           ],
-          "output": "\"id\", \"measurements\",                                                     \"finished\"\n1,    ---\n  \"t\", \"temperature\", \"humidity\"\n  1,   23,            0.4\n---, false\n"
+          "output": "\"id\", \"measurements\", \"finished\"\n1,    ---\n  \"t\", \"temperature\", \"humidity\"\n  1,   23,            0.4\n---,false\n"
         }
       ]
     },
