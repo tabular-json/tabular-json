@@ -1,5 +1,5 @@
 {
-  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/tabular.test.json",
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.1.1/test-suite/tabular.test.json",
   "groups": [
     {
       "description": "should test whether an array contains tabular data",

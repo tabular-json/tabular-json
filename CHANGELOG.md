@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 (2025-11-24)
+
+- Fix: improve field alignment of nested tables inside a table.
+
 ## 1.1.0 (2025-11-22)
 
 - Feat: function `stringify` has a new option `outputAsTable` and helper functions `noNestedArrays`, `noNestedTables`, `isHomogeneous`, `noLongStrings`, and `always`.
