@@ -1,5 +1,5 @@
 {
-  "source": "https://github.com/tabular-json/tabular-json/blob/v1.0.2/test-suite/parse.test.json",
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.1.1/test-suite/parse.test.json",
   "groups": [
     {
       "category": "object",

@@ -1,9 +1,9 @@
-import type { GenericObject, NestedObject, Path } from './types.d.ts'
+import type { NestedObject, Path } from './types.d.ts'
 
 // The utils are largely copied from:
 // - https://github.com/josdejong/csv42
 
-export function isObject(value: unknown): value is GenericObject<unknown> {
+export function isObject<T>(value: unknown): value is Record<string, T> {
   return typeof value === 'object' && value !== null && value.constructor === Object // do not match on classes or Array
 }
 
@@ -42,4 +42,21 @@ export function setIn(object: NestedObject, path: Path, value: unknown): NestedO
   nested[path[iLast]] = value
 
   return object
+}
+
+export function isDeepEqual(a: unknown, b: unknown): boolean {
+  if (a === b) {
+    return true
+  }
+
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return a.length === b.length && a.every((item, index) => isDeepEqual(item, b[index]))
+  }
+
+  if (isObject(a) && isObject(b)) {
+    const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])]
+    return keys.every((key) => isDeepEqual(a[key], b[key]))
+  }
+
+  return false
 }

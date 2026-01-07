@@ -1,5 +1,3 @@
-export type GenericObject<T> = Record<string, T>
-
 export type ValueGetter<T> = (item: T) => unknown
 
 export interface Field<T> {
@@ -17,3 +15,9 @@ export type TableField = {
 export type NestedObject = { [key: string]: NestedObject | unknown }
 
 export type Path = (string | number)[]
+
+export type NonEmptyArray<T> = [T, ...T[]]
+
+export type TabularData<T> = NonEmptyArray<Record<string, T>>
+
+export type OutputAsTable = (tabularData: TabularData<T>) => boolean
