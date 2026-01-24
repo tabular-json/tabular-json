@@ -168,7 +168,7 @@ export function parse(text: string): unknown {
       return false
     }
 
-    const start = i
+    const iOriginal = i
 
     // We need to lookahead to check whether this is a table start or end
     // A table start is followed by a field name enclosed in double quotes
@@ -176,7 +176,7 @@ export function parse(text: string): unknown {
     skipWhitespace()
     const isFollowedByFieldName = text[i] === '"'
 
-    i = start
+    i = iOriginal
 
     return !isFollowedByFieldName
   }
