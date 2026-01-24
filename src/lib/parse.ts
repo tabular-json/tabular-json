@@ -136,7 +136,7 @@ export function parse(text: string): unknown {
   }
 
   function parseTable(): Record<string, unknown>[] | unknown {
-    if (atTableStart()) {
+    if (isTableStart()) {
       i += 3
       skipTableWhitespace()
       eatTableRowSeparator()
@@ -145,12 +145,12 @@ export function parse(text: string): unknown {
       eatTableRowSeparator()
 
       const rows = []
-      while (i < text.length && !atTableEnd()) {
+      while (i < text.length && !isTableEnd()) {
         rows.push(parseTableRow(fields))
         eatTableRowSeparator()
       }
 
-      if (!atTableEnd()) {
+      if (!isTableEnd()) {
         throwTableRowOrEndExpected()
       }
       i += 3
@@ -159,11 +159,11 @@ export function parse(text: string): unknown {
     }
   }
 
-  function atTableStart() {
+  function isTableStart() {
     return text.charCodeAt(i) === codeMinus && text.substring(i, i + 3) === '---'
   }
 
-  function atTableEnd() {
+  function isTableEnd() {
     if (text.substring(i, i + 3) !== '---') {
       return false
     }
