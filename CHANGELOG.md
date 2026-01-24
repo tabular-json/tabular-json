@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2 (2026-01-24)
+
+- Fix: correctly identify table start and end in nested tables.
+
 ## 1.1.1 (2025-11-24)
 
 - Fix: improve field alignment of nested tables inside a table.

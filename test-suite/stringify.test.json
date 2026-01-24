@@ -1,5 +1,5 @@
 {
-  "source": "https://github.com/tabular-json/tabular-json/blob/v1.1.1/test-suite/stringify.test.json",
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.1.2/test-suite/stringify.test.json",
   "groups": [
     {
       "category": "array",

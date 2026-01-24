@@ -1,5 +1,5 @@
 {
-  "source": "https://github.com/tabular-json/tabular-json/blob/v1.1.1/test-suite/parse.test.json",
+  "source": "https://github.com/tabular-json/tabular-json/blob/v1.1.2/test-suite/parse.test.json",
   "groups": [
     {
       "category": "object",
@@ -255,8 +255,8 @@
             "runs": [
               {
                 "data": [
-                  {"time": 1, "voltage": 0.7, "current": -5.5},
-                  {"time": 2, "voltage": 0.7, "current": -7.5}
+                  { "time": 1, "voltage": 0.7, "current": -5.5 },
+                  { "time": 2, "voltage": 0.7, "current": -7.5 }
                 ],
                 "run-id": 1
               }
