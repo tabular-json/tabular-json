@@ -136,7 +136,7 @@ export function parse(text: string): unknown {
   }
 
   function parseTable(): Record<string, unknown>[] | unknown {
-    if (text.charCodeAt(i) === codeMinus && text.substring(i, i + 3) === '---') {
+    if (atTableStart()) {
       i += 3
       skipTableWhitespace()
       eatTableRowSeparator()
@@ -145,18 +145,40 @@ export function parse(text: string): unknown {
       eatTableRowSeparator()
 
       const rows = []
-      while (i < text.length && text.substring(i, i + 3) !== '---') {
+      while (i < text.length && !atTableEnd()) {
         rows.push(parseTableRow(fields))
         eatTableRowSeparator()
       }
 
-      if (text.substring(i, i + 3) !== '---') {
+      if (!atTableEnd()) {
         throwTableRowOrEndExpected()
       }
       i += 3
 
       return rows
     }
+  }
+
+  function atTableStart() {
+    return text.charCodeAt(i) === codeMinus && text.substring(i, i + 3) === '---'
+  }
+
+  function atTableEnd() {
+    if (text.substring(i, i + 3) !== '---') {
+      return false
+    }
+
+    const start = i
+
+    // We need to lookahead to check whether this is a table start or end
+    // A table start is followed by a field name enclosed in double quotes
+    i += 3
+    skipWhitespace()
+    const isFollowedByFieldName = text[i] === '"'
+
+    i = start
+
+    return !isFollowedByFieldName
   }
 
   function parseTableFields(): TableField[] {

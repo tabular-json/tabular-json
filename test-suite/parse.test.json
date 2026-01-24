@@ -247,6 +247,26 @@
     },
     {
       "category": "table",
+      "description": "parse a table containing a nested table ",
+      "tests": [
+        {
+          "input": "{\n  \"runs\": ---\n    \"data\", \"run-id\"\n    ---\n      \"time\", \"voltage\", \"current\"\n      1,      0.7,       -5.5\n      2,      0.7,       -7.5\n    ---,1\n  ---\n}",
+          "output": {
+            "runs": [
+              {
+                "data": [
+                  {"time": 1, "voltage": 0.7, "current": -5.5},
+                  {"time": 2, "voltage": 0.7, "current": -7.5}
+                ],
+                "run-id": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "category": "table",
       "description": "parse a root table with field names that are escaped",
       "tests": [
         {
