@@ -36,11 +36,11 @@ Here is an example of Tabular-JSON data:
     "swimming",
     "biking",
   ],
-  "friends": (
+  "friends": ###
     "id", "name",  "address"."city", "address"."street"
     2,    "joe",   "New York",       "1st Ave"
     3,    "sarah", "Washington",     "18th Street NW"
-  ),
+  ---,
   "address": {
     "city": "New York",
     "street": "1st Ave",
