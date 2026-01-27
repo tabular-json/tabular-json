@@ -291,14 +291,13 @@
           "output": {
             "data": [
               {
-                "value": [ {"nested": true} ]
+                "value": [{ "nested": true }]
               },
               {
-                "value": [ {"nested": true} ]
+                "value": [{ "nested": true }]
               }
             ]
           }
-
         }
       ]
     },

@@ -176,10 +176,7 @@ export function parse(text: string): unknown {
 
   function isTableEnd(rows: Record<string, unknown>[]) {
     // TODO: testing rows.length > 0 is a workaround for some issues with nested tables, but it is no solid solution
-    return rows.length > 0 &&
-      text.charCodeAt(i) === codeMinus &&
-      text.charCodeAt(i + 1) === codeMinus &&
-      text.charCodeAt(i + 2) === codeMinus
+    return rows.length > 0 && text.substring(i, i + 3) === '---'
   }
 
   function parseTableFields(): TableField[] {
@@ -606,7 +603,6 @@ const codeNewline = 0xa // "\n"
 const codeTab = 0x9 // "\t"
 const codeReturn = 0xd // "\r"
 const codeDoubleQuote = 0x0022 // "
-const codeNumberSign = 0x0023 // #
 const codePlus = 0x2b // "+"
 const codeMinus = 0x2d // "-"
 const codeZero = 0x30
