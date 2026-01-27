@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3 (2026-01-27)
+
+- Fix: improve parsing of tables inside tables.
+
 ## 1.1.2 (2026-01-24)
 
 - Fix: correctly identify table start and end in nested tables.
