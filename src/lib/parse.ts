@@ -146,12 +146,12 @@ export function parse(text: string): unknown {
       eatTableRowSeparator()
 
       const rows = []
-      while (i < text.length && !isTableEnd()) {
+      while (i < text.length && !isTableEnd(rows)) {
         rows.push(parseTableRow(fields))
         eatTableRowSeparator()
       }
 
-      if (!isTableEnd()) {
+      if (!isTableEnd(rows)) {
         throwTableRowOrEndExpected()
       }
       i += 3
@@ -161,47 +161,25 @@ export function parse(text: string): unknown {
   }
 
   function isTableStart() {
-    if (text.charCodeAt(i) === codeNumberSign && text.substring(i, i + 3) === '###') {
-      // We're using v2 table start, disable backward compatibility
+    if (text.substring(i, i + 3) === '###') {
       backwardCompatibleTables = false
       return true
     }
 
-    // Backward compatibility with v1, where table start was --- instead of ###
-    if (
-      backwardCompatibleTables &&
-      text.charCodeAt(i) === codeMinus &&
-      text.substring(i, i + 3) === '---'
-    ) {
-      backwardCompatibleTables = true
+    if (backwardCompatibleTables && text.substring(i, i + 3) === '---') {
+      backwardCompatibleTables = false
       return true
     }
 
     return false
   }
 
-  function isTableEnd() {
-    if (!backwardCompatibleTables) {
-      return text.charCodeAt(i) === codeMinus && text.substring(i, i + 3) === '---'
-    }
-
-    // TODO: the following lookahead is for backward compatibility with v1. It solves
-    //  some cases in v1 where table start and end cannot correctly determined.
-    if (text.substring(i, i + 3) !== '---') {
-      return false
-    }
-
-    const iOriginal = i
-
-    // We need to lookahead to check whether this is a table start or end
-    // A table start is followed by a field name enclosed in double quotes
-    i += 3
-    skipWhitespace()
-    const isFollowedByFieldName = text[i] === '"'
-
-    i = iOriginal
-
-    return !isFollowedByFieldName
+  function isTableEnd(rows: Record<string, unknown>[]) {
+    // TODO: testing rows.length > 0 is a workaround for some issues with nested tables, but it is no solid solution
+    return rows.length > 0 &&
+      text.charCodeAt(i) === codeMinus &&
+      text.charCodeAt(i + 1) === codeMinus &&
+      text.charCodeAt(i + 2) === codeMinus
   }
 
   function parseTableFields(): TableField[] {
