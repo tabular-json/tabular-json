@@ -160,12 +160,16 @@ export function parse(text: string): unknown {
   }
 
   function isTableStart() {
-    return text.charCodeAt(i) === codeMinus && text.substring(i, i + 3) === '---'
+    return (
+      text.charCodeAt(i) === codeMinus &&
+      text.charCodeAt(i + 1) === codeMinus &&
+      text.charCodeAt(i + 2) === codeMinus
+    )
   }
 
   function isTableEnd(rows: Record<string, unknown>[]) {
     // TODO: testing rows.length > 0 is a workaround for some issues with nested tables, but it is no solid solution
-    return rows.length > 0 && text.charCodeAt(i) === codeMinus && text.substring(i, i + 3) === '---'
+    return rows.length > 0 && isTableStart()
   }
 
   function parseTableFields(): TableField[] {
