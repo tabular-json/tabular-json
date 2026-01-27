@@ -24,7 +24,7 @@ array
     : '[' ws value ws (',' ws value ws)* trailing? ']'
     | '[' ws ']' ;
 
-table : '---' wst '\n'
+table : '###' wst '\n'
     contents '\n'
     wst '---' ;
 

@@ -15,6 +15,7 @@ import { isDeepEqual, setIn } from './objects.js'
  */
 export function parse(text: string): unknown {
   let i = 0
+  let backwardCompatibleTables = true // Allow table start --- instead of ###
 
   const value = parseRootTable()
   if (value === undefined) {
@@ -160,10 +161,32 @@ export function parse(text: string): unknown {
   }
 
   function isTableStart() {
-    return text.charCodeAt(i) === codeMinus && text.substring(i, i + 3) === '---'
+    if (text.charCodeAt(i) === codeNumberSign && text.substring(i, i + 3) === '###') {
+      // We're using v2 table start, disable backward compatibility
+      backwardCompatibleTables = false
+      return true
+    }
+
+    // Backward compatibility with v1, where table start was --- instead of ###
+    if (
+      backwardCompatibleTables &&
+      text.charCodeAt(i) === codeMinus &&
+      text.substring(i, i + 3) === '---'
+    ) {
+      backwardCompatibleTables = true
+      return true
+    }
+
+    return false
   }
 
   function isTableEnd() {
+    if (!backwardCompatibleTables) {
+      return text.charCodeAt(i) === codeMinus && text.substring(i, i + 3) === '---'
+    }
+
+    // TODO: the following lookahead is for backward compatibility with v1. It solves
+    //  some cases in v1 where table start and end cannot correctly determined.
     if (text.substring(i, i + 3) !== '---') {
       return false
     }
@@ -605,6 +628,7 @@ const codeNewline = 0xa // "\n"
 const codeTab = 0x9 // "\t"
 const codeReturn = 0xd // "\r"
 const codeDoubleQuote = 0x0022 // "
+const codeNumberSign = 0x0023 // #
 const codePlus = 0x2b // "+"
 const codeMinus = 0x2d // "-"
 const codeZero = 0x30
