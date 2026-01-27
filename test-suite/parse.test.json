@@ -284,6 +284,26 @@
     },
     {
       "category": "table",
+      "description": "parse a table containing a nested table (3)",
+      "tests": [
+        {
+          "input": "{\n  \"data\": ###\n    \"value\"\n    ###\n      \"nested\"\n      true\n    ---\n    ###\n      \"nested\"\n      true\n    ---\n  ---\n}\n",
+          "output": {
+            "data": [
+              {
+                "value": [ {"nested": true} ]
+              },
+              {
+                "value": [ {"nested": true} ]
+              }
+            ]
+          }
+
+        }
+      ]
+    },
+    {
+      "category": "table",
       "description": "parse a root table with field names that are escaped",
       "tests": [
         {
