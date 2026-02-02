@@ -75,42 +75,42 @@ describe('should specify option outputAsTable', function () {
 
   test('outputAsTable: always (default)', () => {
     expect(stringify(json)).toEqual(
-      '{"scores":###\n' +
+      '{"scores":(\n' +
         '"values"\n' +
         '[1,2,3]\n' +
         '[5,6,7]\n' +
-        '---,"data":###\n' +
+        '),"data":(\n' +
         '"measurements"\n' +
-        '###\n' +
+        '(\n' +
         '"x","y"\n' +
         '1,3\n' +
         '2,4\n' +
-        '---\n' +
-        '---}'
+        ')\n' +
+        ')}'
     )
   })
 
   test('outputAsTable: noNestedTables', () => {
     expect(stringify(json, { outputAsTable: noNestedTables })).toEqual(
-      '{"scores":###\n' +
+      '{"scores":(\n' +
         '"values"\n' +
         '[1,2,3]\n' +
         '[5,6,7]\n' +
-        '---,"data":[{"measurements":###\n' +
+        '),"data":[{"measurements":(\n' +
         '"x","y"\n' +
         '1,3\n' +
         '2,4\n' +
-        '---}]}'
+        ')}]}'
     )
   })
 
   test('outputAsTable: noNestedArrays', () => {
     expect(stringify(json, { outputAsTable: noNestedArrays })).toEqual(
-      '{"scores":[{"values":[1,2,3]},{"values":[5,6,7]}],"data":[{"measurements":###\n' +
+      '{"scores":[{"values":[1,2,3]},{"values":[5,6,7]}],"data":[{"measurements":(\n' +
         '"x","y"\n' +
         '1,3\n' +
         '2,4\n' +
-        '---}]}'
+        ')}]}'
     )
   })
 })

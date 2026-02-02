@@ -20,11 +20,11 @@ Here is an example of Tabular-JSON:
     "swimming",
     "biking",
   ],
-  "friends": ###
+  "friends": (
     "id", "name",  "address"."city", "address"."street"
     2,    "joe",   "New York",       "1st Ave"
     3,    "sarah", "Washington",     "18th Street NW"
-  ---,
+  ),
   "address": {
     "city": "New York",
     "street": "1st Ave",
@@ -50,11 +50,11 @@ import { parse, stringify } from '@tabular-json/tabular-json'
 const text = `{
   "id": 1,
   "name": "Brandon",
-  "friends": ###
+  "friends": (
     "id", "name"
     2,    "Joe"
     3,    "Sarah"
-  ---
+  )
 }`
 
 const data = parse(text)
@@ -68,12 +68,12 @@ const updatedText = stringify(data, {
 // {
 //   "id": 1,
 //   "name": "Brandon",
-//   "friends": ###
+//   "friends": (
 //     "id", "name"
 //     2,    "Joe"
 //     3,    "Sarah"
 //     4,    "Alan"
-//   ---
+//   )
 // }
 ```
 
@@ -134,16 +134,16 @@ const data = {
 // Use the default table strategy
 console.log(stringify(data, { indentation: 2 }))
 // {
-//   "careTakers": ###
+//   "careTakers": (
 //     "id", "name"
 //     1001, "Joe"
 //     1002, "Sarah"
-//   ---,
-//   "animals": ###
+//   ),
+//   "animals": (
 //     "animalId", "name",     "description"
 //     1,          "Elephant", "Elephants are the largest living land animals."
 //     2,          "Giraffe",  "The giraffe is the tallest living terrestrial animal on Earth"
-//   ---
+//   )
 // }
 
 // Do not output tables containing long strings as table
@@ -155,11 +155,11 @@ console.log(
   })
 )
 // {
-//   "careTakers": ###
+//   "careTakers": (
 //     "id", "name"
 //     1001, "Joe"
 //     1002, "Sarah"
-//   ---,
+//   ),
 //   "animals": [
 //     {
 //       "animalId": 1,
@@ -190,11 +190,11 @@ console.log(
   })
 )
 // {
-//   "careTakers": ###
+//   "careTakers": (
 //     "id", "name"
 //     1001, "Joe"
 //     1002, "Sarah"
-//   ---,
+//   ),
 //   "animals": [
 //     {
 //       "animalId": 1,
