@@ -15,7 +15,8 @@ import { isDeepEqual, setIn } from './objects.js'
  */
 export function parse(text: string): unknown {
   let i = 0
-  let backwardCompatibleTables = true // In v1, tables where enclosed in three minus characters "---"
+  let tableVersion1 = false // tables enclosed in ---, deprecated since v2
+  let tableVersion2 = false // tables enclosed in (...)
 
   const value = parseRootTable()
   if (value === undefined) {
@@ -164,12 +165,22 @@ export function parse(text: string): unknown {
 
   function getTableStart(): '(' | '---' | undefined {
     if (text[i] === '(') {
-      backwardCompatibleTables = false
+      tableVersion2 = true
+
+      if (tableVersion1) {
+        throw new Error('Cannot mix table syntax (...) with deprecated table syntax ---')
+      }
+
       return '('
     }
 
-    if (backwardCompatibleTables && text.substring(i, i + 3) === '---') {
-      backwardCompatibleTables = false
+    if (text.substring(i, i + 3) === '---') {
+      tableVersion1 = true
+
+      if (tableVersion2) {
+        throw new Error('Cannot mix table syntax (...) with deprecated table syntax ---')
+      }
+
       return '---'
     }
 
@@ -177,14 +188,17 @@ export function parse(text: string): unknown {
   }
 
   function getTableEnd(rows: Record<string, unknown>[]): ')' | '---' | undefined {
-    if (text[i] === ')') {
+    if (tableVersion2 && text[i] === ')') {
       return ')'
     }
 
-    // testing rows.length > 0 is a workaround for some issues with nested tables, but it is no solid solution
-    return backwardCompatibleTables && rows.length > 0 && text.substring(i, i + 3) === '---'
-      ? '---'
-      : undefined
+    // testing rows.length > 0 is a workaround for issues with nested tables
+    // due to not being able to separate table start --- from table end ---
+    if (tableVersion1 && rows.length > 0 && text.substring(i, i + 3) === '---') {
+      return '---'
+    }
+
+    return undefined
   }
 
   function parseTableFields(): TableField[] {

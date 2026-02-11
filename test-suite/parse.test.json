@@ -331,6 +331,19 @@
       ]
     },
     {
+      "category": "table",
+      "description": "parse deprecated table syntax using triple minus sign ---",
+      "tests": [
+        {
+          "input": "---\n\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n---",
+          "output": [
+            { "id": 2, "name": "joe" },
+            { "id": 3, "name": "sarah" }
+          ]
+        }
+      ]
+    },
+    {
       "category": "number",
       "description": "should parse a number",
       "tests": [
