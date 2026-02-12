@@ -113,6 +113,19 @@ describe('should specify option outputAsTable', function () {
         ')}]}'
     )
   })
+
+  test('outputAsTable: pass path via callback', () => {
+    // FIXME: write tests to test nesting in objects, arrays, and tables
+    const paths = []
+    stringify(json, {
+      outputAsTable: (_table, path) => {
+        paths.push(path)
+        return true
+      }
+    })
+
+    expect(paths).toEqual([['scores'], ['data'], ['data', 'measurements']])
+  })
 })
 
 test('should handle unsupported data types in stringify', function () {

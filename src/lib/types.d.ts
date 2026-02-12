@@ -2,6 +2,7 @@ export type ValueGetter<T> = (item: T) => unknown
 
 export interface Field<T> {
   name: string
+  path: Path
   getValue: ValueGetter<T>
 }
 
@@ -20,4 +21,4 @@ export type NonEmptyArray<T> = [T, ...T[]]
 
 export type TabularData<T> = NonEmptyArray<Record<string, T>>
 
-export type OutputAsTable = (tabularData: TabularData<T>) => boolean
+export type OutputAsTable = (tabularData: TabularData<T>, path: Path) => boolean
