@@ -348,12 +348,26 @@
       "description": "throw a clear error when a table start is not followed by a newline",
       "tests": [
         {
-          "input": "---\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n---",
-          "throws": "Newline '\\n' expected after table row but got '\"' at position 3"
+          "input": "(\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n)",
+          "throws": "Newline '\\n' expected after table row but got '\"' at position 1"
         },
         {
-          "input": "---  /* comment */  \"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n---",
-          "throws": "Newline '\\n' expected after table row but got '\"' at position 20"
+          "input": "(  /* comment */  \"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n)",
+          "throws": "Newline '\\n' expected after table row but got '\"' at position 18"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "throw a clear error when a table end is not preceded by a newline",
+      "tests": [
+        {
+          "input": "(\n\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\")",
+          "throws": "Newline '\\n' expected after table row but got ')' at position 31"
+        },
+        {
+          "input": "(\n\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"  /* comment */  )",
+          "throws": "Newline '\\n' expected after table row but got ')' at position 48"
         }
       ]
     },
