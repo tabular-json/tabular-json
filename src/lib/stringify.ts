@@ -17,7 +17,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
   const globalIndentation = resolveIndentation(options?.indentation)
   const outputAsTable = options?.outputAsTable ?? always
 
-  let path = []
+  let getPath = () => []
 
   return stringifyValue(json, '', !!globalIndentation)
 
@@ -55,7 +55,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     }
 
     // Table
-    if (isTabular(value) && outputAsTable(value, path.slice())) {
+    if (isTabular(value) && outputAsTable(value, getPath)) {
       return stringifyTable(value, indent)
     }
 
@@ -77,13 +77,14 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       return '[]'
     }
 
-    const pathIndex = path.length
+    let i: number
+    const getParentPath = getPath
+    getPath = () => getParentPath().concat(i)
     const childIndent = doIndent ? indent + globalIndentation : indent
     let str = doIndent ? '[\n' : '['
 
-    for (let i = 0; i < array.length; i++) {
+    for (i = 0; i < array.length; i++) {
       const item = array[i]
-      path[pathIndex] = i
 
       if (doIndent) {
         str += childIndent
@@ -102,7 +103,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       }
     }
 
-    path.pop()
+    getPath = getParentPath
     str += doIndent ? '\n' + indent + ']' : ']'
 
     return str
@@ -112,7 +113,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     const isRoot = array === json
     const childIndent = globalIndentation && !isRoot ? indent + globalIndentation : indent
     const colSeparator = globalIndentation ? ', ' : ','
-    const parentPath = path
+    const getParentPath = getPath
 
     const fields = getFields(array)
 
@@ -123,7 +124,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     const header = fields.map((field) => field.name)
     const rows = array.map((item) =>
       fields.map((field) => {
-        path = parentPath.concat(field.path)
+        getPath = () => getParentPath().concat(field.path)
         return stringifyValue(field.getValue(item), childIndent, false)
       })
     )
@@ -139,7 +140,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     }
 
     str += isRoot ? '' : indent + ')'
-    path = parentPath
+    getPath = getParentPath
 
     return str
   }
@@ -165,13 +166,16 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       return '{}'
     }
 
-    const pathIndex = path.length
+    let key: string
+    let value: unknown
+    const getParentPath = getPath
     const childIndent = doIndent ? indent + globalIndentation : indent
     let str = doIndent ? '{\n' : '{'
+    getPath = () => getParentPath().concat(key)
 
-    entries.forEach(([key, value], index) => {
+    for (let index = 0; index < entries.length; index++) {
+      ;[key, value] = entries[index]
       const keyStr = stringifyStringValue(key)
-      path[pathIndex] = key
       str += doIndent ? childIndent + keyStr + ': ' : keyStr + ':'
 
       str += stringifyValue(value, childIndent, doIndent)
@@ -181,9 +185,9 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       } else if (options?.trailingCommas) {
         str += ','
       }
-    })
+    }
 
-    path.pop()
+    getPath = getParentPath
     str += doIndent ? '\n' + indent + '}' : '}'
 
     return str

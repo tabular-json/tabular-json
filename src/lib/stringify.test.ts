@@ -116,10 +116,11 @@ describe('should specify option outputAsTable', function () {
 
   test('outputAsTable: pass path via callback', () => {
     // FIXME: write tests to test nesting in objects, arrays, and tables
+    // FIXME: write tests with consecutive arrays/objects
     const paths = []
     stringify(json, {
-      outputAsTable: (_table, path) => {
-        paths.push(path)
+      outputAsTable: (_table, getPath) => {
+        paths.push(getPath())
         return true
       }
     })
