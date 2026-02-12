@@ -482,7 +482,7 @@ export function parse(text: string): unknown {
   function eatTableRowSeparator() {
     // must start with a newline
     if (text.charCodeAt(i) !== codeNewline) {
-      throw new SyntaxError(`Newline '\n' expected after table row ${gotAt()}`)
+      throw new SyntaxError(`Newline '\\n' expected after table row ${gotAt()}`)
     }
 
     // can optionally be followed by more newlines and whitespace and comments

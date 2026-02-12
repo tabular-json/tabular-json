@@ -344,6 +344,20 @@
       ]
     },
     {
+      "category": "table",
+      "description": "throw a clear error when a table start is not followed by a newline",
+      "tests": [
+        {
+          "input": "---\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n---",
+          "throws": "Newline '\\n' expected after table row but got '\"' at position 3"
+        },
+        {
+          "input": "---  /* comment */  \"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n---",
+          "throws": "Newline '\\n' expected after table row but got '\"' at position 20"
+        }
+      ]
+    },
+    {
       "category": "number",
       "description": "should parse a number",
       "tests": [
