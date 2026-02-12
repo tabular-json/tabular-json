@@ -1,4 +1,5 @@
 export type ValueGetter<T> = (item: T) => unknown
+export type PathGetter = () => Path
 
 export interface Field<T> {
   name: string
