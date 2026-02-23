@@ -56,7 +56,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     }
 
     // Table
-    if (isTabular(value) && outputAsTable(value, getPath)) {
+    if (isTabular(value) && outputAsTable(value, getPath())) {
       return stringifyTable(value, indent)
     }
 

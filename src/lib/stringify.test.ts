@@ -119,8 +119,8 @@ describe('should specify option outputAsTable', function () {
       const paths = []
 
       stringify(json, {
-        outputAsTable: (_table, getPath) => {
-          paths.push(getPath())
+        outputAsTable: (_table, path) => {
+          paths.push(path)
           return true
         }
       })

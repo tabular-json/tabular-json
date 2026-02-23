@@ -22,4 +22,4 @@ export type NonEmptyArray<T> = [T, ...T[]]
 
 export type TabularData<T> = NonEmptyArray<Record<string, T>>
 
-export type OutputAsTable = (tabularData: TabularData<T>, getPath: () => Path) => boolean
+export type OutputAsTable = (tabularData: TabularData<T>, path: Path) => boolean

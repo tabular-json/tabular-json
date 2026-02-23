@@ -87,7 +87,7 @@ type stringify = (json: unknown, options?: StringifyOptions) => string
 interface StringifyOptions {
   indentation?: number | string
   trailingCommas?: boolean
-  outputAsTable?: <T>(tabularData: Tabular<T>, getPath: () => Path) => boolean
+  outputAsTable?: <T>(tabularData: Tabular<T>, path: Array<string | number>) => boolean
 }
 ```
 
@@ -210,15 +210,14 @@ console.log(
 // }
 ```
 
-The second argument `getPath` of the callback function `outputAsTable` is a getter resolving the path of the current `tabularData`. To keep data serialization as fast as possible, the path is only lazily resolved by invoking the getter function: `getPath()`.
+The second argument `path` of the callback function `outputAsTable` contains path of the current `tabularData`.
 
 ```js
 stringify(someMeasurementData, {
-  outputAsTable: (tabularData, getPath) => {
-    const path = getPath()
+  outputAsTable: (tabularData, path) => {
     const lastProperty = path[path.length - 1]
     return lastProperty === 'measurements'
-  } 
+  }
 })
 ```
 
