@@ -529,7 +529,7 @@ export function parse(text: string): unknown {
   }
 
   function throwTableRowOrEndExpected() {
-    throw new SyntaxError(`Table row or end of table '---' expected ${gotAt()}`)
+    throw new SyntaxError(`Table row or end of table ')' expected ${gotAt()}`)
   }
 
   function throwArrayItemExpected() {
