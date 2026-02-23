@@ -115,17 +115,31 @@ describe('should specify option outputAsTable', function () {
   })
 
   test('outputAsTable: pass path via callback', () => {
-    // FIXME: write tests to test nesting in objects, arrays, and tables
-    // FIXME: write tests with consecutive arrays/objects
-    const paths = []
-    stringify(json, {
-      outputAsTable: (_table, getPath) => {
-        paths.push(getPath())
-        return true
-      }
-    })
+    function logPaths(json: unknown) {
+      const paths = []
 
-    expect(paths).toEqual([['scores'], ['data'], ['data', 'measurements']])
+      stringify(json, {
+        outputAsTable: (_table, getPath) => {
+          paths.push(getPath())
+          return true
+        }
+      })
+
+      return paths
+    }
+
+    expect(logPaths([{ id: 1 }])).toEqual([[]])
+    expect(logPaths([[{ id: 1 }]])).toEqual([[0]])
+    expect(logPaths([[{ id: 1 }], [{ id: 1 }]])).toEqual([[0], [1]])
+    expect(logPaths({ table: [{ id: 1 }] })).toEqual([['table']])
+    expect(logPaths([{ table: [{ id: 1 }] }])).toEqual([[], [0, 'table']])
+    expect(logPaths([[{ table: [{ id: 1 }] }]])).toEqual([[0], [0, 0, 'table']])
+    expect(logPaths([{ table: [{ id: 1 }] }, { table: [{ id: 1 }] }])).toEqual([
+      [],
+      [0, 'table'],
+      [1, 'table']
+    ])
+    expect(logPaths(json)).toEqual([['scores'], ['data'], ['data', 0, 'measurements']])
   })
 })
 

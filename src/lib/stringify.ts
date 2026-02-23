@@ -115,20 +115,23 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     const colSeparator = globalIndentation ? ', ' : ','
 
     const fields = getFields(array)
+
+    let i: number
     let currentPath: Path
-    pathGetters.push(() => currentPath)
+    pathGetters.push(() => [i, ...currentPath])
 
     let str = isRoot ? '' : '(\n'
 
     // We pass doIndent=false so nested objects/arrays are not formatted over multiple lines.
     // Nested tables though are always indented (when globalIndentation is set).
     const header = fields.map((field) => field.name)
-    const rows = array.map((item) =>
-      fields.map((field) => {
+    const rows = array.map((item, index) => {
+      i = index
+      return fields.map((field) => {
         currentPath = field.path
         return stringifyValue(field.getValue(item), childIndent, false)
       })
-    )
+    })
 
     if (globalIndentation) {
       const widths = calculateColumnWidths(header, rows)
