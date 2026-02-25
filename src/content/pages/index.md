@@ -36,11 +36,11 @@ Here is an example of Tabular-JSON data:
     "swimming",
     "biking",
   ],
-  "friends": ---
+  "friends": (
     "id", "name",  "address"."city", "address"."street"
     2,    "joe",   "New York",       "1st Ave"
     3,    "sarah", "Washington",     "18th Street NW"
-  ---,
+  ),
   "address": {
     "city": "New York",
     "street": "1st Ave",
@@ -60,7 +60,7 @@ And here a table at root level, with streamable rows:
 So what are the ingredients of Tabular-JSON?
 
 - Take JSON.
-- Add support for CSV-like tables. Tables are wrapped in a `---` block (except at root level), and they support nested objects.
+- Add support for CSV-like tables. Tables are wrapped in round brackets `(` and `)` except at root level, and they support nested objects.
 - Add support for trailing commas to make it more streaming-friendly.
 - Add support for positive infinity (`inf`), negative infinity (`-inf`), and `nan`.
 - Add support for line comments (`// ...`) and block comments (`/* ... */`).
@@ -90,16 +90,16 @@ Tabular-JSON files have a `*.tjson` extension, for example `data.tjson`
 
 Tabular-JSON supports the following data types:
 
-| Data type  | Example                                                                     | Detection                                                                                                        |
-| ---------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| object     | `{ "name": "Joe", "age": 24 }`                                              | Starts with `{`                                                                                                  |
-| array      | `[7.4, 5.2, 8.1]`                                                           | Starts with `[`                                                                                                  |
-| table      | <pre>---<br>`"id","name"`<br/>`1018,"Joe"`<br/>`1078,"Sarah"`<br/>---</pre> | Starts with `---`                                                                                                |
-| root table | <pre>`"id","name"`<br/>`1018,"Joe"`<br/>`1078,"Sarah"`</pre>                | Starts with a string followed by a comma and another string, or a string followed by a newline and another value |
-| boolean    | `true`                                                                      | Equals `true` or `false`                                                                                         |
-| null       | `null`                                                                      | Equals `null`                                                                                                    |
-| number     | `-2.3e5`                                                                    | Starts with a digit or a minus                                                                                   |
-| string     | `"hello world"`                                                             | Starts with `"`                                                                                                  |
+| Data type  | Example                                                                 | Detection                                                                                                        |
+| ---------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| object     | `{ "name": "Joe", "age": 24 }`                                          | Starts with `{`                                                                                                  |
+| array      | `[7.4, 5.2, 8.1]`                                                       | Starts with `[`                                                                                                  |
+| table      | <pre>(<br>`"id","name"`<br/>`1018,"Joe"`<br/>`1078,"Sarah"`<br/>)</pre> | Starts with `(`                                                                                                  |
+| root table | <pre>`"id","name"`<br/>`1018,"Joe"`<br/>`1078,"Sarah"`</pre>            | Starts with a string followed by a comma and another string, or a string followed by a newline and another value |
+| boolean    | `true`                                                                  | Equals `true` or `false`                                                                                         |
+| null       | `null`                                                                  | Equals `null`                                                                                                    |
+| number     | `-2.3e5`                                                                | Starts with a digit or a minus                                                                                   |
+| string     | `"hello world"`                                                         | Starts with `"`                                                                                                  |
 
 ## Differences between JSON and Tabular-JSON
 

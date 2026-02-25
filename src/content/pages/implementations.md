@@ -25,11 +25,11 @@ import { parse, stringify } from '@tabular-json/tabular-json'
 const text = `{
   "id": 1,
   "name": "Brandon",
-  "friends": ---
+  "friends": (
     "id", "name"
     2,    "Joe"
     3,    "Sarah"
-  ---
+  )
 }`
 
 const data = parse(text)
@@ -40,12 +40,12 @@ const updatedText = stringify(data, { indentation: 2, trailingCommas: false })
 // {
 //   "id": 1,
 //   "name": "Brandon",
-//   "friends": ---
+//   "friends": (
 //     "id", "name"
 //     2,    "Joe"
 //     3,    "Sarah"
 //     4,    "Alan"
-//   ---
+//   )
 // }
 ```
 
@@ -67,11 +67,11 @@ from tabularjson import parse, stringify, StringifyOptions
 text = """{
     "id": 1,
     "name": "Brandon",
-    "friends": ---
+    "friends": (
     "id", "name"
         2,    "Joe"
         3,    "Sarah"
-    ---
+    )
 }
 """
 
@@ -94,12 +94,12 @@ print(updatedText)
 # {
 #     "id": 1,
 #     "name": "Brandon",
-#     "friends": ---
+#     "friends": (
 #         "id", "name"
 #         2,    "Joe"
 #         3,    "Sarah"
 #         4,    "Alan"
-#     ---
+#     )
 # }
 ```
 

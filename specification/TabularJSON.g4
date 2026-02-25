@@ -24,9 +24,9 @@ array
     : '[' ws value ws (',' ws value ws)* trailing? ']'
     | '[' ws ']' ;
 
-table : '---' wst '\n'
+table : '(' wst '\n'
     contents '\n'
-    wst '---' ;
+    wst ')' ;
 
 contents : header '\n' ws rows ;
 header   : field (',' field)* ;

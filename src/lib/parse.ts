@@ -15,6 +15,8 @@ import { isDeepEqual, setIn } from './objects.js'
  */
 export function parse(text: string): unknown {
   let i = 0
+  let tableVersion1 = false // tables enclosed in ---, deprecated since v2
+  let tableVersion2 = false // tables enclosed in (...)
 
   const value = parseRootTable()
   if (value === undefined) {
@@ -136,8 +138,9 @@ export function parse(text: string): unknown {
   }
 
   function parseTable(): Record<string, unknown>[] | unknown {
-    if (isTableStart()) {
-      i += 3
+    const tableStart = getTableStart()
+    if (tableStart !== undefined) {
+      i += tableStart.length
       skipTableWhitespace()
       eatTableRowSeparator()
 
@@ -145,31 +148,57 @@ export function parse(text: string): unknown {
       eatTableRowSeparator()
 
       const rows = []
-      while (i < text.length && !isTableEnd(rows)) {
+      while (i < text.length && getTableEnd(rows) === undefined) {
         rows.push(parseTableRow(fields))
         eatTableRowSeparator()
       }
 
-      if (!isTableEnd(rows)) {
+      const tableEnd = getTableEnd(rows)
+      if (tableEnd === undefined) {
         throwTableRowOrEndExpected()
       }
-      i += 3
+      i += tableEnd.length
 
       return rows
     }
   }
 
-  function isTableStart() {
-    return (
-      text.charCodeAt(i) === codeMinus &&
-      text.charCodeAt(i + 1) === codeMinus &&
-      text.charCodeAt(i + 2) === codeMinus
-    )
+  function getTableStart(): '(' | '---' | undefined {
+    if (text[i] === '(') {
+      tableVersion2 = true
+
+      if (tableVersion1) {
+        throw new Error('Cannot mix table syntax (...) with deprecated table syntax ---')
+      }
+
+      return '('
+    }
+
+    if (text.substring(i, i + 3) === '---') {
+      tableVersion1 = true
+
+      if (tableVersion2) {
+        throw new Error('Cannot mix table syntax (...) with deprecated table syntax ---')
+      }
+
+      return '---'
+    }
+
+    return undefined
   }
 
-  function isTableEnd(rows: Record<string, unknown>[]) {
-    // TODO: testing rows.length > 0 is a workaround for some issues with nested tables, but it is no solid solution
-    return rows.length > 0 && isTableStart()
+  function getTableEnd(rows: Record<string, unknown>[]): ')' | '---' | undefined {
+    if (tableVersion2 && text[i] === ')') {
+      return ')'
+    }
+
+    // testing rows.length > 0 is a workaround for issues with nested tables
+    // due to not being able to separate table start --- from table end ---
+    if (tableVersion1 && rows.length > 0 && text.substring(i, i + 3) === '---') {
+      return '---'
+    }
+
+    return undefined
   }
 
   function parseTableFields(): TableField[] {
@@ -453,7 +482,7 @@ export function parse(text: string): unknown {
   function eatTableRowSeparator() {
     // must start with a newline
     if (text.charCodeAt(i) !== codeNewline) {
-      throw new SyntaxError(`Newline '\n' expected after table row ${gotAt()}`)
+      throw new SyntaxError(`Newline '\\n' expected after table row ${gotAt()}`)
     }
 
     // can optionally be followed by more newlines and whitespace and comments
@@ -500,7 +529,7 @@ export function parse(text: string): unknown {
   }
 
   function throwTableRowOrEndExpected() {
-    throw new SyntaxError(`Table row or end of table '---' expected ${gotAt()}`)
+    throw new SyntaxError(`Table row or end of table ')' expected ${gotAt()}`)
   }
 
   function throwArrayItemExpected() {

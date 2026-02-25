@@ -66,3 +66,35 @@ for (const [category, testGroups] of Object.entries(testsByCategory)) {
     }
   })
 }
+
+describe('backward compatibility', () => {
+  test('should not allow mixing new and old table syntax (1)', () => {
+    expect(() =>
+      parse(`{
+        "table1": ---
+          "id","name"
+          1,"joe"
+        ---,
+        "table2": (
+          "id","name"
+          1,"joe"
+        )
+      }`)
+    ).toThrow('Cannot mix table syntax (...) with deprecated table syntax ---')
+  })
+
+  test('should not allow mixing new and old table syntax (2)', () => {
+    expect(() =>
+      parse(`{
+        "table1": (
+          "id","name"
+          1,"joe"
+        ),
+        "table2": ---
+          "id","name"
+          1,"joe"
+        ---
+      }`)
+    ).toThrow('Cannot mix table syntax (...) with deprecated table syntax ---')
+  })
+})

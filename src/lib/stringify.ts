@@ -109,7 +109,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
     const fields = getFields(array)
 
-    let str = isRoot ? '' : '---\n'
+    let str = isRoot ? '' : '(\n'
 
     // We pass doIndent=false so nested objects/arrays are not formatted over multiple lines.
     // Nested tables though are always indented (when globalIndentation is set).
@@ -128,7 +128,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       rows.forEach((row) => (str += childIndent + row.join(colSeparator) + '\n'))
     }
 
-    str += isRoot ? '' : indent + '---'
+    str += isRoot ? '' : indent + ')'
 
     return str
   }

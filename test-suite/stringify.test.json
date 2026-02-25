@@ -152,7 +152,7 @@
               { "id": 2, "name": "Sarah" }
             ]
           },
-          "output": "{\"data\":---\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n---}"
+          "output": "{\"data\":(\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n)}"
         }
       ]
     },
@@ -170,7 +170,7 @@
               { "id": 2, "name": "Sarah" }
             ]
           },
-          "output": "{\n  \"data\": ---\n    \"id\", \"name\"\n    1,    \"Joe\"\n    2,    \"Sarah\"\n  ---\n}"
+          "output": "{\n  \"data\": (\n    \"id\", \"name\"\n    1,    \"Joe\"\n    2,    \"Sarah\"\n  )\n}"
         }
       ]
     },
@@ -195,7 +195,7 @@
               { "id": 2, "name": "Sarah", "friends": [] }
             ]
           },
-          "output": "{\n  \"data\": ---\n    \"id\", \"name\",  \"friends\"\n    1,    \"Joe\",   ---\n      \"id\", \"name\"\n      3,    \"Kevin\"\n      2,    \"Sarah\"\n    ---\n    2,    \"Sarah\", []\n  ---\n}"
+          "output": "{\n  \"data\": (\n    \"id\", \"name\",  \"friends\"\n    1,    \"Joe\",   (\n      \"id\", \"name\"\n      3,    \"Kevin\"\n      2,    \"Sarah\"\n    )\n    2,    \"Sarah\", []\n  )\n}"
         }
       ]
     },
@@ -213,7 +213,7 @@
               { "id": 2, "name": "Sarah" }
             ]
           },
-          "output": "{\n~~\"data\": ---\n~~~~\"id\", \"name\"\n~~~~1,    \"Joe\"\n~~~~2,    \"Sarah\"\n~~---\n}"
+          "output": "{\n~~\"data\": (\n~~~~\"id\", \"name\"\n~~~~1,    \"Joe\"\n~~~~2,    \"Sarah\"\n~~)\n}"
         }
       ]
     },
@@ -235,7 +235,7 @@
               }
             ]
           },
-          "output": "{\n  \"data\": ---\n    \"id\", \"name\",  \"address\".\"city\", \"address\".\"street\"\n    1,    \"Joe\",   \"New York\",       \"1st Ave\"\n    2,    \"Sarah\", \"Washington\",     \"18th Street NW\"\n  ---\n}"
+          "output": "{\n  \"data\": (\n    \"id\", \"name\",  \"address\".\"city\", \"address\".\"street\"\n    1,    \"Joe\",   \"New York\",       \"1st Ave\"\n    2,    \"Sarah\", \"Washington\",     \"18th Street NW\"\n  )\n}"
         }
       ]
     },
@@ -276,7 +276,7 @@
               { "id": 2, "address": {} }
             ]
           },
-          "output": "{\n  \"data\": ---\n    \"id\", \"address\".\"city\"\n    1,    \"New York\"\n    2,    \n  ---\n}"
+          "output": "{\n  \"data\": (\n    \"id\", \"address\".\"city\"\n    1,    \"New York\"\n    2,    \n  )\n}"
         },
         {
           "input": {
@@ -285,7 +285,7 @@
               { "id": 2, "address": "1st Ave, New York" }
             ]
           },
-          "output": "{\n  \"data\": ---\n    \"id\", \"address\"\n    1,    {\"city\":\"New York\"}\n    2,    \"1st Ave, New York\"\n  ---\n}"
+          "output": "{\n  \"data\": (\n    \"id\", \"address\"\n    1,    {\"city\":\"New York\"}\n    2,    \"1st Ave, New York\"\n  )\n}"
         }
       ]
     },
@@ -319,7 +319,7 @@
               { "id": 2, "scores": [7.7] }
             ]
           },
-          "output": "{\n  \"data\": ---\n    \"id\", \"scores\"\n    1,    [7.2,6.1,8.1]\n    2,    [7.7]\n  ---\n}"
+          "output": "{\n  \"data\": (\n    \"id\", \"scores\"\n    1,    [7.2,6.1,8.1]\n    2,    [7.7]\n  )\n}"
         }
       ]
     },
@@ -335,7 +335,7 @@
             { "id": 1, "scores": [{ "value": 7.2 }, { "value": 6.1 }, { "value": 8.1 }] },
             { "id": 2, "scores": [{ "value": 7.7 }] }
           ],
-          "output": "\"id\", \"scores\"\n1,    ---\n  \"value\"\n  7.2\n  6.1\n  8.1\n---\n2,    ---\n  \"value\"\n  7.7\n---\n"
+          "output": "\"id\", \"scores\"\n1,    (\n  \"value\"\n  7.2\n  6.1\n  8.1\n)\n2,    (\n  \"value\"\n  7.7\n)\n"
         }
       ]
     },
@@ -353,7 +353,7 @@
               { "id": 2, "scores": [{ "value": 7.7 }] }
             ]
           },
-          "output": "{\n  \"data\": ---\n    \"id\", \"scores\"\n    1,    ---\n      \"value\"\n      7.2\n      6.1\n      8.1\n    ---\n    2,    ---\n      \"value\"\n      7.7\n    ---\n  ---\n}"
+          "output": "{\n  \"data\": (\n    \"id\", \"scores\"\n    1,    (\n      \"value\"\n      7.2\n      6.1\n      8.1\n    )\n    2,    (\n      \"value\"\n      7.7\n    )\n  )\n}"
         },
         {
           "input": [
@@ -363,7 +363,7 @@
               "finished": false
             }
           ],
-          "output": "\"id\", \"measurements\", \"finished\"\n1,    ---\n  \"t\", \"temperature\", \"humidity\"\n  1,   23,            0.4\n---,false\n"
+          "output": "\"id\", \"measurements\", \"finished\"\n1,    (\n  \"t\", \"temperature\", \"humidity\"\n  1,   23,            0.4\n),false\n"
         }
       ]
     },

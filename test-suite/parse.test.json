@@ -75,7 +75,7 @@
       "description": "should parse a table",
       "tests": [
         {
-          "input": "---\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n---",
+          "input": "(\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n)",
           "output": [
             { "id": 1, "name": "Joe" },
             { "id": 2, "name": "Sarah" }
@@ -88,7 +88,7 @@
       "description": "should parse a table with \\r\\n newlines",
       "tests": [
         {
-          "input": "---\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n---",
+          "input": "(\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n)",
           "output": [
             { "id": 1, "name": "Joe" },
             { "id": 2, "name": "Sarah" }
@@ -101,7 +101,7 @@
       "description": "should parse a table with nested properties",
       "tests": [
         {
-          "input": "---\n    \"id\",\"name\",\"address\".\"city\",\"address\".\"street\"\n    1,\"Joe\",\"New York\",\"1st Ave\"\n    2,\"Sarah\",\"Washington\",\"18th Street NW\"\n    ---",
+          "input": "(\n    \"id\",\"name\",\"address\".\"city\",\"address\".\"street\"\n    1,\"Joe\",\"New York\",\"1st Ave\"\n    2,\"Sarah\",\"Washington\",\"18th Street NW\"\n    )",
           "output": [
             { "id": 1, "name": "Joe", "address": { "city": "New York", "street": "1st Ave" } },
             {
@@ -118,7 +118,7 @@
       "description": "should parse a table with whitespace",
       "tests": [
         {
-          "input": "---\n      \"id\" , \"details\" . \"name\" \n      1 , \"Joe\" \n      2 , \"Sarah\" \n      ---",
+          "input": "(\n      \"id\" , \"details\" . \"name\" \n      1 , \"Joe\" \n      2 , \"Sarah\" \n      )",
           "output": [
             { "id": 1, "details": { "name": "Joe" } },
             { "id": 2, "details": { "name": "Sarah" } }
@@ -131,7 +131,7 @@
       "description": "should parse a table with missing values",
       "tests": [
         {
-          "input": "---\n\"id\", \"name\"\n1 , \n2 , \"Sarah\" \n---",
+          "input": "(\n\"id\", \"name\"\n1 , \n2 , \"Sarah\" \n)",
           "output": [{ "id": 1 }, { "id": 2, "name": "Sarah" }]
         },
         {
@@ -139,11 +139,11 @@
           "output": [{ "id": 1, "name": "Joe" }, { "name": "Sarah" }]
         },
         {
-          "input": "---\n\"id\", \"name\" \n1 , \"Joe\" \n, \"Sarah\" \n---",
+          "input": "(\n\"id\", \"name\" \n1 , \"Joe\" \n, \"Sarah\" \n)",
           "output": [{ "id": 1, "name": "Joe" }, { "name": "Sarah" }]
         },
         {
-          "input": "---\n\"id\" \n1 \n\n3\n---",
+          "input": "(\n\"id\" \n1 \n\n3\n)",
           "output": [{ "id": 1 }, { "id": 3 }]
         }
       ]
@@ -153,7 +153,7 @@
       "description": "should parse a nested table",
       "tests": [
         {
-          "input": "{\n\"data\": ---\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n---\n  }",
+          "input": "{\n\"data\": (\n\"id\",\"name\"\n1,\"Joe\"\n2,\"Sarah\"\n)\n  }",
           "output": {
             "data": [
               { "id": 1, "name": "Joe" },
@@ -220,7 +220,7 @@
       "description": "parse a table containing nested arrays",
       "tests": [
         {
-          "input": "---\n\"id\", \"name\", \"score\"\n1, \"joe\", [5, 7]\n2, \"sarah\", [7, 7, 8]\n---",
+          "input": "(\n\"id\", \"name\", \"score\"\n1, \"joe\", [5, 7]\n2, \"sarah\", [7, 7, 8]\n)",
           "output": [
             { "id": 1, "name": "joe", "score": [5, 7] },
             { "id": 2, "name": "sarah", "score": [7, 7, 8] }
@@ -233,7 +233,7 @@
       "description": "parse a root containing nested objects",
       "tests": [
         {
-          "input": "---\n\"id\", \"name\", \"address\"\n1, \"Joe\", { \"city\": \"New York\", \"street\": \"1st Ave\" }\n2, \"Sarah\", { \"city\": \"Washington\", \"street\": \"18th Street NW\" }\n---",
+          "input": "(\n\"id\", \"name\", \"address\"\n1, \"Joe\", { \"city\": \"New York\", \"street\": \"1st Ave\" }\n2, \"Sarah\", { \"city\": \"Washington\", \"street\": \"18th Street NW\" }\n)",
           "output": [
             { "id": 1, "name": "Joe", "address": { "city": "New York", "street": "1st Ave" } },
             {
@@ -250,7 +250,7 @@
       "description": "parse a table containing a nested table (1)",
       "tests": [
         {
-          "input": "{\n  \"data\": ---\n    \"values\"\n    ---\n      \"value\"\n      1\n      2\n    ---\n  ---\n}\n",
+          "input": "{\n  \"data\": (\n    \"values\"\n    (\n      \"value\"\n      1\n      2\n    )\n  )\n}\n",
           "output": {
             "data": [
               {
@@ -266,7 +266,7 @@
       "description": "parse a table containing a nested table (2)",
       "tests": [
         {
-          "input": "{\n  \"runs\": ---\n    \"id\", \"data\"\n    \"1\",  ---\n      \"value\"\n      7.9\n    ---\n    \"2\",  ---\n      \"value\"\n      7.8\n    ---\n  ---\n}",
+          "input": "{\n  \"runs\": (\n    \"id\", \"data\"\n    \"1\",  (\n      \"value\"\n      7.9\n    )\n    \"2\",  (\n      \"value\"\n      7.8\n    )\n  )\n}",
           "output": {
             "runs": [
               {
@@ -276,6 +276,25 @@
               {
                 "id": "2",
                 "data": [{ "value": 7.8 }]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse a table containing a nested table (3)",
+      "tests": [
+        {
+          "input": "{\n  \"data\": (\n    \"value\"\n    (\n      \"nested\"\n      true\n    )\n    (\n      \"nested\"\n      true\n    )\n  )\n}\n",
+          "output": {
+            "data": [
+              {
+                "value": [{ "nested": true }]
+              },
+              {
+                "value": [{ "nested": true }]
               }
             ]
           }
@@ -308,6 +327,47 @@
               }
             }
           ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "parse deprecated table syntax using triple minus sign ---",
+      "tests": [
+        {
+          "input": "---\n\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n---",
+          "output": [
+            { "id": 2, "name": "joe" },
+            { "id": 3, "name": "sarah" }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "throw a clear error when a table start is not followed by a newline",
+      "tests": [
+        {
+          "input": "(\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n)",
+          "throws": "Newline '\\n' expected after table row but got '\"' at position 1"
+        },
+        {
+          "input": "(  /* comment */  \"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"\n)",
+          "throws": "Newline '\\n' expected after table row but got '\"' at position 18"
+        }
+      ]
+    },
+    {
+      "category": "table",
+      "description": "throw a clear error when a table end is not preceded by a newline",
+      "tests": [
+        {
+          "input": "(\n\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\")",
+          "throws": "Newline '\\n' expected after table row but got ')' at position 31"
+        },
+        {
+          "input": "(\n\"id\",\"name\"\n2,\"joe\"\n3,\"sarah\"  /* comment */  )",
+          "throws": "Newline '\\n' expected after table row but got ')' at position 48"
         }
       ]
     },
