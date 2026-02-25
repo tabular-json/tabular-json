@@ -60,7 +60,7 @@ And here a table at root level, with streamable rows:
 So what are the ingredients of Tabular-JSON?
 
 - Take JSON.
-- Add support for CSV-like tables. Tables are wrapped in round brackets `(` and `)` except at root level, and they support nested objects.
+- Add support for CSV-like tables. Tables are wrapped in round brackets `(...)` except at root level. They support nested objects.
 - Add support for trailing commas to make it more streaming-friendly.
 - Add support for positive infinity (`inf`), negative infinity (`-inf`), and `nan`.
 - Add support for line comments (`// ...`) and block comments (`/* ... */`).
