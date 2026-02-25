@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.0 (2026-02-25)
+
+Breaking changes:
+
+- Feat: changes the table syntax from `---...---` to `(...)`. The change is implemented in a backward compatible way. You can parse tables in both the old and new format, but stringifying data will now output tables with the new syntax.
+
+Non-breaking changes:
+
+- Feat: pass the current `path` via the `outputAsTable` callback of function `stringify` (#17).
+
 ## 1.1.3 (2026-01-27)
 
 - Fix: improve parsing of tables inside tables.
