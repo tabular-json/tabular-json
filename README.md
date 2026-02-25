@@ -210,7 +210,7 @@ console.log(
 // }
 ```
 
-The second argument `path` of the callback function `outputAsTable` contains path of the current `tabularData`.
+The second argument `path` of the callback function `outputAsTable` contains path of the current `tabularData`. For example, to output the contents of all properties "measurements" in the data:
 
 ```js
 stringify(someMeasurementData, {
