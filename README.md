@@ -87,7 +87,7 @@ type stringify = (json: unknown, options?: StringifyOptions) => string
 interface StringifyOptions {
   indentation?: number | string
   trailingCommas?: boolean
-  outputAsTable?: <T>(tabularData: Tabular<T>) => boolean
+  outputAsTable?: <T>(tabularData: Tabular<T>, path: Array<string | number>) => boolean
 }
 ```
 
@@ -208,6 +208,17 @@ console.log(
 //     }
 //   ]
 // }
+```
+
+The second argument `path` of the callback function `outputAsTable` contains path of the current `tabularData`. For example, to output the contents of all properties "measurements" in the data:
+
+```js
+stringify(someMeasurementData, {
+  outputAsTable: (tabularData, path) => {
+    const lastProperty = path[path.length - 1]
+    return lastProperty === 'measurements'
+  }
+})
 ```
 
 ## Test Suite

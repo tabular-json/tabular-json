@@ -1,4 +1,4 @@
-import type { Field, OutputAsTable, Path, ValueGetter } from './types.d.ts'
+import type { Field, OutputAsTable, Path, PathGetter, ValueGetter } from './types.d.ts'
 import { getIn, isObject } from './objects.js'
 import { collectFields, isTabular } from './tabular.js'
 import { always } from './tableProperties.js'
@@ -16,6 +16,9 @@ export interface StringifyOptions {
 export function stringify(json: unknown, options?: StringifyOptions): string {
   const globalIndentation = resolveIndentation(options?.indentation)
   const outputAsTable = options?.outputAsTable ?? always
+
+  const pathGetters: PathGetter[] = []
+  const getPath = () => pathGetters.map((get) => get()).flat()
 
   return stringifyValue(json, '', !!globalIndentation)
 
@@ -53,7 +56,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
     }
 
     // Table
-    if (isTabular(value) && outputAsTable(value)) {
+    if (isTabular(value) && outputAsTable(value, getPath())) {
       return stringifyTable(value, indent)
     }
 
@@ -75,10 +78,12 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       return '[]'
     }
 
+    let i: number
+    pathGetters.push(() => [i])
     const childIndent = doIndent ? indent + globalIndentation : indent
     let str = doIndent ? '[\n' : '['
 
-    for (let i = 0; i < array.length; i++) {
+    for (i = 0; i < array.length; i++) {
       const item = array[i]
 
       if (doIndent) {
@@ -98,7 +103,9 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       }
     }
 
+    pathGetters.pop()
     str += doIndent ? '\n' + indent + ']' : ']'
+
     return str
   }
 
@@ -109,14 +116,22 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
 
     const fields = getFields(array)
 
+    let i: number
+    let currentPath: Path
+    pathGetters.push(() => [i, ...currentPath])
+
     let str = isRoot ? '' : '(\n'
 
     // We pass doIndent=false so nested objects/arrays are not formatted over multiple lines.
     // Nested tables though are always indented (when globalIndentation is set).
     const header = fields.map((field) => field.name)
-    const rows = array.map((item) =>
-      fields.map((field) => stringifyValue(field.getValue(item), childIndent, false))
-    )
+    const rows = array.map((item, index) => {
+      i = index
+      return fields.map((field) => {
+        currentPath = field.path
+        return stringifyValue(field.getValue(item), childIndent, false)
+      })
+    })
 
     if (globalIndentation) {
       const widths = calculateColumnWidths(header, rows)
@@ -128,6 +143,7 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       rows.forEach((row) => (str += childIndent + row.join(colSeparator) + '\n'))
     }
 
+    pathGetters.pop()
     str += isRoot ? '' : indent + ')'
 
     return str
@@ -154,10 +170,14 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       return '{}'
     }
 
+    let key: string
+    let value: unknown
     const childIndent = doIndent ? indent + globalIndentation : indent
     let str = doIndent ? '{\n' : '{'
+    pathGetters.push(() => [key])
 
-    entries.forEach(([key, value], index) => {
+    for (let index = 0; index < entries.length; index++) {
+      ;[key, value] = entries[index]
       const keyStr = stringifyStringValue(key)
       str += doIndent ? childIndent + keyStr + ': ' : keyStr + ':'
 
@@ -168,9 +188,11 @@ export function stringify(json: unknown, options?: StringifyOptions): string {
       } else if (options?.trailingCommas) {
         str += ','
       }
-    })
+    }
 
+    pathGetters.pop()
     str += doIndent ? '\n' + indent + '}' : '}'
+
     return str
   }
 
@@ -201,6 +223,7 @@ function resolveIndentation(indentation: number | string | undefined): string | 
 function getFields(records: Array<unknown>): Field<unknown>[] {
   return collectFields(records).map((path) => ({
     name: stringifyField(path),
+    path,
     getValue: createGetValue(path)
   }))
 }
